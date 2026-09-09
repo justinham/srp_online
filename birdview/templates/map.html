@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+	  <meta charset="UTF-8">
+	  <title>Canvas Path Drawing</title>
+
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  	  <link href="https://unpkg.com/maplibre-gl@3.2.1/dist/maplibre-gl.css" rel="stylesheet" />
+  	  <script src="https://unpkg.com/maplibre-gl@3.2.1/dist/maplibre-gl.js"></script>
+  
+  
+
+	  <style>
+	    body {
+	      margin: 0;
+	      font-family: Arial, sans-serif;
+	      background: #fafafa;
+	      display: flex;
+	      flex-direction: column;
+	      align-items: center;
+	      padding: 20px;
+	    }
+
+	    #map {
+	      width: 100%;
+     	  height: 90vh;
+    	}
+
+    	#coords{
+    		font-weight: bold;
+    		position: absolute;
+		    top: 25px;
+		    z-index: 100;
+		    background: yellow;
+		    padding: 3px;
+    	}
+
+	    #controls {
+	      margin-bottom: 20px;
+	    }
+
+	    button {
+	      padding: 10px 20px;
+	      font-size: 16px;
+	      background-color: #007bff;
+	      color: white;
+	      border: none;
+	      border-radius: 5px;
+	      cursor: pointer;
+	    }
+
+	    button:hover {
+	      background-color: #0056b3;
+	    }
+
+	    canvas {
+	      border: 1px solid #ccc;
+	      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+	      background-color: #ffffff;
+	    }
+
+	    #loading-overlay{
+	    	width: 100%;
+		    height: 100%;
+		    background-color: rgba(0, 0, 0, 0.7);
+		    z-index: 9999;
+		    position: fixed;
+		    display: none;
+		}
+
+	    #loading-overlay img{
+	    	position: fixed;
+	    	left:40%;
+	    	top:45%;
+	    	width:20%;
+	    }
+
+	    #loading-overlay div{
+	    	text-align: center;
+	    	text-indent: bold;
+	    	margin-top: 45%;
+			color: white;
+			font-size: 20px;
+	    }
+
+	     #LocalBtn {
+            position: fixed;
+		    bottom: 65px;
+		    right: 25px;
+		    padding: 10px 16px;
+		    background-color: #2473f9;
+		    color: white;
+		    border: none;
+		    border-radius: 8px;
+		    font-size: 16px;
+		    cursor: pointer;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		    z-index: 999;
+        }
+
+	  </style>
+	</head>
+
+	<body>
+
+		<div id="coords">
+			<!-- <span id="status"></span> -->
+			<!-- <span ></span> -->
+		</div>
+		
+		<div id="map"></div>
+
+		 <div id="loading-overlay">
+		 	<div>loading GPS...</div>
+	        <image src="static/loading2.gif"></image>
+	    </div>
+
+
+    	<button id="LocalBtn" onclick="to_local()">Current Sensing</button>
+
+
+
+
+	</body>
+
+	<script>
+
+		let map = null
+		
+		let veh_loc = [0, 0]
+
+	
+		document.addEventListener('DOMContentLoaded', function () {
+		    
+		    // map styles:
+		    // 1. basic rough: 'https://demotiles.maplibre.org/style.json', // free public style
+		    // 2. detail photo: 'https://api.maptiler.com/maps/satellite/style.json?key=KYsY54iIIdV4lm89KCjs' 
+		    // 2.1 outdoor: https://api.maptiler.com/maps/outdoor-v2/style.json?key=KYsY54iIIdV4lm89KCjs
+		    //3. street no photo: 'https://api.maptiler.com/maps/basic-v2/style.json?key=KYsY54iIIdV4lm89KCjs'
+		    // 4. open map: https://osm-bright.osm.org/style.json
+
+		    // 1. load current vehicle location
+		    // 2. draw map use vehicle as center
+		    // 3. add markers show all saved target
+		    load_init_map();
+		    
+		    // load_saved_locs();
+		   
+		});
+
+
+		function to_local(){
+        	window.location.href = '/';
+      	}
+
+
+
+
+
+		 function load_init_map(){
+            fetch('/ublox_gps.json') 
+            .then(response => response.json())
+            .then(data => {
+                let lat = parseFloat(data[0]).toFixed(6);
+                let lon = parseFloat(data[1]).toFixed(6);
+                let x = parseFloat(data[2]).toFixed(2);
+                let y = parseFloat(data[3]).toFixed(2);
+                let dis = parseFloat(data[4]).toFixed(2);
+                // document.getElementById("ublox").innerHTML = "UBLOX: "+lat+", " +lon+" | Loc (m): ("+x+", "+y+")"+ " | "+dis ;
+                veh_loc = [lon, lat];
+
+                const R = 6378137; // Earth radius in meters
+				const newLat = veh_loc[1] - (-20 / R) * (180 / Math.PI);
+				const map_c = [veh_loc[0], newLat];
+
+                map = new maplibregl.Map({
+				      container: 'map',
+				      style:'https://api.maptiler.com/maps/outdoor-v2/style.json?key=KYsY54iIIdV4lm89KCjs',
+				      // style:'https://api.maptiler.com/maps/satellite/style.json?key=KYsY54iIIdV4lm89KCjs',
+				      center: map_c,
+				      // center: [50, 0],
+				      zoom: 18,
+				      maxZoom: 22
+			    });
+			    map.addControl(new maplibregl.NavigationControl());
+
+				map.on('load', () => {
+					load_saved_locs(map);
+				});
+
+
+            })
+
+            .catch(err => {
+              console.error('Error fetching can heading data:', err);
+            });
+
+        }
+
+        function load_saved_locs(map){
+            fetch('/all_loc') 
+            .then(response => response.json())
+            .then(data => {
+                
+        		// alert(data);
+        		for (let i=0; i<data.length; i++){
+        			let label = data[i].name;
+        			let loc = data[i].latlon;
+
+					// add_marker2(map, loc[0], loc[1]); 
+					if (label=="demo"){
+						add_marker3(map, loc[0], loc[1], label); 	
+					}else{
+						add_marker3(map, loc[0], loc[1], label); 
+					}
+					
+        		}
+            })
+
+            .catch(err => {
+              console.error('Error fetching can heading data:', err);
+            });
+
+        }
+
+		  
+		function add_marker(map, lat, lon) {
+		   
+		    new maplibregl.Marker()
+		        .setLngLat([lon, lat])
+		        .addTo(map);
+		}
+
+
+		function add_marker2(map, lat, lon){
+
+			const marker = document.createElement('div');
+		    marker.style.width = '12px';
+		    marker.style.height = '12px';
+		    marker.style.backgroundColor = 'orange';
+		    marker.style.borderRadius = '50%';
+		    marker.style.border = '3px solid white';
+
+		    const label = document.createElement('div');
+			label.textContent = 'v'; // <-- your text here
+			label.style.fontSize = '12px';
+			label.style.color = 'black';
+			label.style.marginBottom = '4px';
+			label.style.backgroundColor = 'white';
+			label.style.padding = '2px 4px';
+			label.style.borderRadius = '4px';
+			label.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3)';
+
+		    const el = document.createElement('div');
+		    el.style.display = 'flex';
+			el.style.flexDirection = 'column';
+			el.style.alignItems = 'center';
+			// el.appendChild(label);
+			el.appendChild(marker);
+
+			let cur_loc_marker = new maplibregl.Marker({ element: el }).setLngLat([lon, lat]).addTo(map);
+		
+		}
+
+		function add_marker3(map, lat, lon, name){
+
+			const marker2 = document.createElement('div');
+		    marker2.style.width = '30px';
+		    marker2.style.height = '30px';
+		    marker2.style.backgroundColor = 'purple';
+		    if (name=="demo"){
+		    	marker2.style.backgroundColor = 'green';
+		    }
+		    marker2.style.borderRadius = '50%';
+		    marker2.style.border = '3px solid white';
+
+		    let name_short = ""
+		    if (name=="demo"){
+		    	name_short = "demo"
+		    }else{
+		    	name_short = name.slice(5,16).replace('-','/').replace('-',':').replace('_',' ')
+		    }
+		    const label2 = document.createElement('div');
+			label2.textContent = name_short;
+			label2.style.fontSize = '12px';
+			label2.style.color = 'black';
+			label2.style.marginBottom = '4px';
+			label2.style.backgroundColor = 'white';
+			label2.style.padding = '2px 4px';
+			label2.style.borderRadius = '4px';
+			label2.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3)';
+
+			label2.style.position = 'absolute';
+			label2.style.bottom = '100%';
+			label2.style.left = '50%';
+			label2.style.transform = 'translateX(-50%)';
+			// label2.style.opacity = '0';
+			label2.style.transition = 'opacity 0.2s';
+			label2.style.pointerEvents = 'none';
+
+		    const el2 = document.createElement('div');
+		    el2.style.display = 'flex';
+			el2.style.flexDirection = 'column';
+			el2.style.alignItems = 'center';
+			el2.appendChild(label2);
+			el2.appendChild(marker2);
+
+			el2.addEventListener("click", () => {	
+				if (name=="demo"){
+					get_save1_path();
+				}else{
+					load_path_spe(name);
+				}
+			});
+
+			// el2.addEventListener('mouseenter', () => {
+			//   label2.style.opacity = '1';
+			// });
+
+			// el2.addEventListener('mouseleave', () => {
+			//   label2.style.opacity = '0';
+			// });
+
+			// --- Touch behavior (mobile/tablet) ---
+			// el2.addEventListener('touchstart', (e) => {
+			//   e.stopPropagation(); // prevent bubbling
+			//   const visible = label2.style.opacity === '1';
+			//   label2.style.opacity = visible ? '0' : '1';
+			// });
+
+			let cur_person_marker = new maplibregl.Marker({ element: el2 }).setLngLat([lon, lat]).addTo(map);
+
+		}
+
+		function get_save1_path() {
+            const data = "new";
+            
+            fetch('/saved1_path_gen', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'text/plain'  // or 'application/json' if needed
+              },
+              body: data
+            })
+            .then(response => response.text())
+            .then(result => {
+              console.log("Server response:", result);
+              let feedback = JSON.parse(result).status;
+              if (feedback=="success"){
+                // document.getElementById("path_info").innerHTML = "Previous trajectory loaded)"
+    			window.location.href = '/';
+
+              }
+              // else{
+              //   document.getElementById("path_info").innerHTML = "Trajectory generation fail"
+              // }
+
+              // alert("new path generated, replacing previous sensing")
+              // localStorage.setItem("myDivContent", "1");
+              // location.reload()
+
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        }
+
+
+        function load_path_spe(name) {
+          const date = name;
+          let data = { 'date': date };
+
+          fetch('/load_path_spe', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify(data)            
+          })
+          .then(response => response.json())     
+          .then(result => {
+            console.log("Server response:", result);
+            let feedback = result.status;
+            if (feedback=="success"){
+                // document.getElementById("path_info").innerHTML = "Previous trajectory loaded)"
+    			window.location.href = '/';
+
+              }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+        }
+
+	  
+	</script>
+
+</html>

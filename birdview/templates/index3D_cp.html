@@ -1,0 +1,2917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Three.js Interactive Scene</title>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/PLYLoader.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script> -->
+    
+    
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden; /* Prevent scrollbars */
+        }
+
+        canvas {
+            display: block; /* Remove extra space below canvas */
+        }
+
+        #can_h {
+          position: fixed;
+          bottom: 20px;
+          right: 350px;
+          /*left:20px;*/
+          padding: 10px 16px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          background: black;
+        }
+
+
+        #ublox {
+          position: fixed;
+          bottom: 60px;
+          right: 350px;
+          /*left:20px;*/
+          padding: 10px 16px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          background: black;
+        }
+
+        #ardis {
+          position: fixed;
+          bottom: 100px;
+          right: 350px;
+          /*left:20px;*/
+          padding: 10px 16px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          background: black;
+        }
+
+        #uwb {
+          position: fixed;
+          bottom: 140px;
+          right: 350px;
+          /*left:20px;*/
+          padding: 10px 16px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          background: black;
+        }
+
+       /* #reloadBtn {
+          position: fixed;
+          bottom: 185px;
+          right: 20px;
+          padding: 8px 10px;
+          background-color: #ff7b00;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+        }*/
+
+        #reloadBtn {
+          position: fixed;
+          bottom:20px;
+          right: 168px;
+          padding: 10px 16px;
+          background-color: #ff7b00;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+        }
+
+        #p1btn {
+          position: fixed;
+          bottom: 65px;
+          right: 108px;
+          padding: 10px 16px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          display: none;
+        }
+
+        #p2btn {
+          position: fixed;
+          bottom: 65px;
+          right: 20px;
+          padding: 10px 16px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          display: none;
+        }
+
+        #m1btn {
+          position: fixed;
+          bottom: 65px;
+          right: 170px;
+          padding: 10px 16px;
+          background-color: #007b44;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          display: none;
+        }
+
+        #m2btn {
+          position: fixed;
+          bottom: 65px;
+          right: 20px;
+          padding: 10px 16px;
+          background-color: #007b44;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          display: none;
+        }
+
+         #m3btn {
+          position: fixed;
+          bottom: 185px;
+          /*right: 238px;*/
+          right: 20px;
+          padding: 8px 10px;
+          background-color: #ff7b00;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          /*display: none;*/
+        }
+
+        #path1btn{
+          position: fixed;
+          bottom: 112px;
+          /*right: 238px;*/
+          right: 20px;
+          padding: 8px 10px;
+          background-color: #ff7b00;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          
+        }
+
+        #path2btn{
+          position: fixed;
+          bottom: 112px;
+          /*right: 238px;*/
+          right: 110px;
+          padding: 8px 10px;
+          background-color: #ff7b00;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          
+        }
+
+        #path3btn{
+          position: fixed;
+          bottom: 112px;
+          /*right: 238px;*/
+          right: 200px;
+          padding: 8px 10px;
+          background-color: #ff7b00;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          
+        }
+
+        #v1btn {
+          position: fixed;
+          bottom: 65px;
+          right: 115px;
+          padding: 10px 16px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+        }
+
+        #v2btn {
+          position: fixed;
+          bottom: 65px;
+          right: 20px;
+          padding: 10px 16px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+        }
+/*
+         #HomeBtn {
+          position: fixed;
+          bottom:20px;
+          right: 167px;
+          padding: 10px 16px;
+          background-color: #ff7b00;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+        }*/
+
+        #HomeBtn {
+          position: fixed;
+          right: 20px;
+          top:300px;
+          padding: 6px 8px;
+          background-color: #3d628a;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          width:70px;
+          text-align: center;
+        }
+
+         #startBtn {
+          position: fixed;
+          bottom:20px;
+          right: 93px;
+          padding: 10px 16px;
+          background-color: #007b00;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+        }
+
+        #stopBtn {
+          position: fixed;
+          bottom:20px;
+          right: 20px;
+          padding: 10px 16px;
+          background-color: #b70000;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+        }
+
+        #genBtn {
+          position: fixed;
+          bottom: 185px;
+          right: 20px;
+          padding: 8px 10px;
+          background-color: #ff7b00;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          display:none;
+        }
+
+        #loadPreBtn{
+          position: fixed;
+          right: 20px;
+          top:300px;
+          padding: 8px 10px;
+          background-color: #ff7b00;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 12px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+        }
+
+        #saveCurBtn{
+          position: fixed;
+          right: 95px;
+          top:300px;
+          padding: 6px 8px;
+          background-color: #3d628a;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          width: 70px;
+          text-align: center;
+        }
+
+        #toggle-header{
+          padding: 8px 10px;
+          background-color: #ff7b00;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 12px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          width: 88px;
+        }
+
+         #path_info {
+          position: fixed;
+          bottom: 155px;
+          right: 20px;
+          padding: 4px 8px;
+          color: red;
+          border: none;
+          border-radius: 4px;
+          font-size: 14px;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 998;
+          font-weight: bold;
+          background: white;
+        }
+
+        .labels {
+          position: fixed;
+          top: 110px;
+          right: 15px;
+          background: rgba(255, 255, 255, 0.3);
+          padding: 8px 12px;
+          border-radius: 8px;
+          font-family: Arial, sans-serif;
+          font-size: 14px;
+          z-index: 999;
+          font-weight: bold;
+        }
+
+        .label-item {
+          margin: 4px 0;
+        }
+
+        .label-reverse {
+          color: #00ffff;
+        }
+
+        .label-forward {
+          color: #00ff00;
+        }
+
+        .label-obstacles {
+          color: #ff6600;
+        }
+
+        .label-init {
+          color: #ff00ff;
+        }
+
+        .label-spot {
+          color: #ffff00;
+        }
+
+        .label-ground {
+          color: #00aaff;
+        }
+
+        .label-anc {
+          color: #ffffff;
+        }
+
+        .label-curr {
+          color: #ff0000;
+        }
+
+        .header {
+          font-size: 18px;
+          font-weight: bold;
+          cursor: pointer;
+          padding: 10px;
+          background-color: #eee;
+          border: 1px solid #ccc;
+          width: fit-content;
+          border-radius: 5px;
+        }
+
+        .button-list {
+          margin-top: 10px;
+          display: none; /* Hidden by default */
+        }
+
+        .toggle-button {
+          padding: 3px 4px;
+          margin: 5px;
+          background-color: #f0f0f0;
+          cursor: pointer;
+          border-radius: 5px;
+        }
+
+        #toggle-div {
+          position: fixed;
+          right: 20px;
+          top: 335px;
+          background-color: #ff7b00;
+          z-index: 999;
+          border-radius: 5px;
+        }
+
+        .toggle-button.active {
+          background-color: #4caf50;
+          color: white;
+          border-color: #4caf50;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- <button id="can_h" disabled>CAN: 0.0, 0.0, 0.0</button> -->
+    <button id="can_h" disabled>CAN heading: 0.0</button>
+    <button id="ublox" disabled>UBLOX: 0.0, 0.0 </button>
+    <button id="ardis" disabled>--</button>
+    <!-- <button id="uwb" disabled>--</button> -->
+
+    <button id="reloadBtn" onclick="location.reload()">Reload</button>
+ 
+    <button id="p1btn" onclick="load_path1()">Direct in</button>
+    <button id="p2btn" onclick="load_path2()">Shift in</button>
+    <div id="path_opt" style="display: none">1</div>
+
+    <button id="m1btn" onclick="switch_monitor('CAN')">CAN Monitor</button>
+    <button id="m2btn" onclick="switch_monitor('UBLOX')">UBLOX Monitor</button>
+    <button id="m3btn" onclick="save_gps()">Init GPS</button>
+
+    <button id="path1btn" onclick="reg_path(1)">Trans #1</button>
+    <button id="path2btn" onclick="reg_path(2)">Trans #2</button>
+    <button id="path3btn" onclick="reg_path(3)">Trans #3</button>
+    
+
+    <button id="v1btn" onclick="switch_view('0')">birdview</button>
+    <button id="v2btn" onclick="switch_view('1')">FP view</button>
+
+
+    <button id="HomeBtn" onclick="to_home()">Load</button>
+    <button id="startBtn" onclick="start_exc()">Start</button>
+    <button id="stopBtn" onclick="stop_exc()">Stop</button>
+    <button id="genBtn" onclick="path_gen()">Path Generation</button>
+    <!-- <button id="loadPreBtn" onclick="path_gen_save1()">Load</button> -->
+   <!--  <div id="loadPreBtn" onclick="">
+      Load
+    </div> -->
+
+    <div id="toggle-div" style="display: none;">
+      <div class="header" id="toggle-header">Historical paths</div>
+      <div class="button-list" id="button-list">
+        <li class="toggle-button">Button 1</li>
+        <li class="toggle-button">Button 2</li>
+      </div>
+    </div>
+
+
+    <script>
+      const header = document.getElementById('toggle-header');
+      const buttonList = document.getElementById('button-list');
+      let isVisible = false;
+
+      header.addEventListener('click', () => {
+        isVisible = !isVisible;
+        buttonList.style.display = isVisible ? 'block' : 'none';
+        header.textContent = isVisible ? 'Historical paths' : 'Historical paths';
+      });
+
+      // Optional: toggle button activation
+      document.querySelectorAll('.toggle-button').forEach(button => {
+        button.addEventListener('click', () => {
+          button.classList.toggle('active');
+        });
+      });
+
+      const btn = document.getElementById("vibrateBtn");
+      const buzzSound = document.getElementById("buzzSound");
+      let stop_interv = null;
+
+
+      function check_stop(){
+
+          fetch('/succ_stop') 
+            .then(response => response.text())
+            .then(result => {
+              let feedback = JSON.parse(result).tag;
+              if (feedback=="stop"){
+                document.getElementById("path_info").innerHTML = "Mission complete";
+
+                // vibrate (android only)
+                if ("vibrate" in navigator) {
+                  navigator.vibrate(500);
+                }
+
+                // sound (only support user click)
+                const buzzSound = document.getElementById("buzzSound");
+                buzzSound.currentTime = 0; // restart from start
+                buzzSound.play();
+
+                // UI
+
+                clearInterval(stop_interv);
+              }
+
+              // else{
+              //   document.getElementById("path_info").innerHTML = "Mission not complete";
+              // }
+            })
+
+            .catch(err => {
+              console.error('Error fetching mission data:', err);
+            });
+        }
+
+
+
+      function to_home(){
+        window.location.href = '/map';
+      }
+
+
+    
+
+   
+    // btn.addEventListener("click", () => {
+    //   // Play the sound
+    //   buzzSound.currentTime = 0; // restart from start
+    //   buzzSound.play()
+    //     .then(() => alert("Buzz sound played!"))
+    //     .catch(err => console.error("Playback failed:", err));
+    // });
+
+    </script>
+
+
+
+    <button id="saveCurBtn" onclick="save_curr_path()">Save</button>
+
+    <div id="path_info" ></div>
+    <audio id="buzzSound" src="/static/success.mp3" preload="auto"></audio>
+
+    
+    
+    
+
+    <div class="labels">
+        <div class="label-item label-ground">Ground</div>
+        <div class="label-item label-obstacles">Obstacles</div>
+<!--         <div class="label-item label-anc">Anchors</div> -->
+<!--         <div class="label-item label-init">Initial Location</div> -->
+        <div class="label-item label-spot">Parking Spot</div>
+        <div class="label-item label-forward">Path (Gear-F)</div>
+<!--         <div class="label-item label-reverse">Path (Gear-R)</div> -->
+        <div class="label-item label-curr">Vehicle Realtime</div>
+        
+    </div>
+
+    <script type="text/javascript">
+
+        window.addEventListener("DOMContentLoaded", () => {
+          const savedContent = localStorage.getItem("myDivContent");
+          if (savedContent) {
+            document.getElementById("path_opt").innerHTML = savedContent;
+          }
+        });
+
+        function load_path1(){
+            localStorage.setItem("myDivContent", "1");
+            location.reload()
+        }
+
+        function load_path2(){
+            localStorage.setItem("myDivContent", "2");
+            location.reload()
+            
+        }
+
+        // let monitor = "CAN";
+        let monitor = "UBLOX"
+        let view_option = 0;
+        let reset_view_tag = 0;
+        function switch_monitor(mon){
+            monitor = mon;
+        }
+
+        function switch_view(v){
+            view_option = parseInt(v);        
+        }
+
+
+        function save_gps(){
+           fetch('/ublox_gps_before_shift.json') 
+            .then(response => response.json())
+            .then(data => {
+                let lat = parseFloat(data[0]).toFixed(6);
+                let lon = parseFloat(data[1]).toFixed(6);
+                console.log("init bf shift:", lat, lon)
+                // let heading = data[2];
+                // let x = parseFloat(data[3]).toFixed(2);
+                // let y = parseFloat(data[4]).toFixed(2);
+                // let dis = parseFloat(data[5]).toFixed(2);
+                // document.getElementById("can_h").innerHTML = "CAN: "+lat+", " +lon+" | Head: "+ heading+" | Loc (m): ("+x+", "+y+")"+ " | "+dis ;
+                document.getElementById("path_info").innerHTML = "GPS reset";
+
+            })
+
+            .catch(err => {
+              console.error('Error dumplicating gps data:', err);
+            });
+        }
+
+        function reg_path(opt){
+          gen_new_path(opt)
+
+          function gen_new_path(opt) {
+            fetch('/path_reg_x5?opt='+opt) 
+              .then(response => response.json())
+              .then(result => {
+                try {
+                    const data = JSON.parse(result);
+                    document.getElementById("path_info").innerHTML = "Transform path option " + opt + ": " + result;
+                } catch (e) {
+                    // If it's not JSON, just treat it as a string
+                    document.getElementById("path_info").innerHTML = "Transform path option " + opt + ": " + result;
+                }
+              })
+
+              .catch(err => {
+                console.error('Error fetching data:', err);
+                document.getElementById("path_info").innerHTML = "Transform fail";
+              });
+          }        
+        }
+
+    </script>
+
+    <script type="module">
+
+        // import from https online
+        // import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.122/build/three.module.js";
+        // import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.122/examples/jsm/controls/OrbitControls.js";
+        
+        // Import TWEEN.js for animations
+        // import * as TWEEN from "https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@latest/dist/tween.esm.js";
+
+    
+        // import from local (bridge..)
+
+        import * as THREE from "/static/three.module.js";
+        import { OrbitControls } from "/static/OrbitControls.js";
+        import {MTLLoader} from "/static/mtl.js";
+        import {OBJLoader} from "/static/obj.js";
+
+
+        
+        // import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js'; 
+        // import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/controls/OrbitControls.js';
+
+
+        import * as TWEEN from "/static/tween.esm.js";
+
+
+        let opt = localStorage.getItem("myDivContent")
+        if (opt==null){
+            localStorage.setItem("myDivContent", "1");
+        }
+
+        
+        var camera, controls, scene, renderer, spots, tween;
+        var objects = []; // This variable is declared but not used in the provided code snippet
+        var planed_path_points = [];
+        var real_veh_loc_history = [];
+        var ant_loc_history = [];
+        var veh_heading_cur = -1;
+        let ant_his_len = 1;
+        let vis_his_len = 5;
+
+        let target_loc_n_head = [0,0,0]
+        let currentVehicleHum = null; 
+
+        let eh_model = null;
+        
+        init();
+        animate();
+
+        // control
+  //       document.addEventListener('keydown', function(event) {
+  //           console.log(camera.position)
+
+  //           switch (event.keyCode) {
+		//         case 87: // W
+		//             camera.position.z -= 0.1;
+		//             break;
+		//         case 65: // A
+		//             camera.position.x -= 0.1;
+		//             break;
+		//         case 83: // S
+		//             camera.position.z += 0.1;
+		//             break;
+		//         case 68: // D
+		//             camera.position.x += 0.1;
+  //                   // camera.lookAt(0, 0, 0); 
+  //                   // camera.lookAt(camera.position.x, 0, 10);
+  //                   // camera.lookAt(camera.position.x, 0, 10); 
+		//             break;
+		//     }
+		// });
+
+        function load_car_model(){
+
+          // obj and mtl
+          const mtlLoader = new MTLLoader();
+          // mtlLoader.load('./static/sedan_t.mtl', (materials) => {
+          mtlLoader.load('./static/hummer.mtl', (materials) => {
+            materials.preload();
+
+            // Then load the OBJ with the materials
+            const objLoader = new OBJLoader();
+            objLoader.setMaterials(materials);
+            // objLoader.load('./static/sedan_t.obj', (object) => {
+            objLoader.load('./static/hummer.obj', (object) => {
+              object.scale.set(0.3, 0.3, 0.3);
+              scene.add(object);
+            });
+          });
+        }
+
+        function init() {
+
+            // load car .obj/.mtl model
+            
+            load_car_model_hummer([100,100], 0);
+            
+            load_all_paths()
+
+            // camera
+            camera = new THREE.PerspectiveCamera(
+                50, // vertical field of view (human ~45-50)
+                window.innerWidth / window.innerHeight,
+                0.01,
+                100
+            );
+ 
+            // camera perspective (birdview)
+            let cx = 0
+            let cy = 50
+            let cz = 0
+            camera.position.set(cx, cy, cz); 
+            camera.lookAt(new THREE.Vector3(0, 0, 0));     
+          
+
+            scene = new THREE.Scene();
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            buildScene();
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            // controls.enableDamping = true;
+            // controls.dampingFactor = 0.7;
+
+
+            // customize camera perspective contorl instead (above)
+            controls.target.set(0, 0, 0);
+            controls.update(); // update the control to apply the new target
+
+            // controls.addEventListener('end', () => {
+            //     updateCameraOrbit();
+            // });
+
+            // updateCameraOrbit(); // Initial call to set controls target
+
+            // renderer.domElement.addEventListener("click", onclick, true);
+
+            // Handle window resizing
+            window.addEventListener('resize', onWindowResize, false);
+
+            // add_compass();
+
+            // realtime veh location
+            // const loader = new GLTFLoader();
+            // loader.load('car_model.glb', function (gltf) {
+            //   const car = gltf.scene;
+            //   car.scale.set(0.5, 0.5, 0.5); // Adjust size
+            //   car.position.set(0, 0, 0);
+            //   scene.add(car);
+            // });
+
+            // rotate the scene 
+            // scene.rotation.y = Math.PI / 2.0;  //
+            // scene.rotation.x = -Math.PI / 2.0;  //
+
+
+
+            // camera 1st person view
+            // scene.rotateX(-Math.PI / 2)
+            // scene.rotateY(-Math.PI / 2)
+            // scene.rotateZ(Math.PI / 2)
+
+
+
+        }
+
+        function reset_three_view_bird(){
+            if (reset_view_tag==1){
+                return;
+            }
+
+            let cx = 0;
+            let cy = 50;
+            let cz = 0;
+            camera.position.set(cx, cy, cz); 
+            camera.lookAt(new THREE.Vector3(0, 0, 0));     
+
+            controls.target.set(0, 0, 0);
+            controls.update(); // update the control to apply the new target
+            reset_view_tag = 1;
+            
+        }
+
+        function update_three_view_in_veh(){
+
+            reset_view_tag = 0;
+
+            if (real_veh_loc_history.length<1){
+                return;
+            }
+
+            let curr_loc = real_veh_loc_history[real_veh_loc_history.length-1]
+            // console.log("three", curr_loc.position.x, curr_loc.position.z, veh_heading_cur)
+            let veh_heading_rel = (-veh_heading_cur-90)%360
+            // camera perspective (1st person)
+            let cx_offset = 10
+            let cy_offset = 5
+            let cz_offset = 0
+
+            let angle = veh_heading_rel * Math.PI / 180; // to radians
+            let del_x = cx_offset * Math.cos(angle) + cz_offset * Math.sin(angle)
+            let del_z = cx_offset * Math.sin(angle) + cz_offset * Math.cos(angle)
+
+            let cx_test = curr_loc.position.x+cx_offset
+            let cz_test = -curr_loc.position.z-cz_offset
+            let cx = curr_loc.position.x+del_x;
+            let cz = -curr_loc.position.z-del_z;
+            let cy = cy_offset;
+            camera.position.set(cx, cy, cz); 
+
+            // console.log("three2", cx, cz, cx_test, cz_test)
+
+            // let tx = curr_loc.position.x-cx_offset
+            // let tz = -curr_loc.position.z+cz_offset
+            let tx = curr_loc.position.x-del_x;
+            let tz = -curr_loc.position.z+del_z;
+            let ty = 0;
+            
+
+
+            controls.target.set(tx, ty, tz);
+            controls.update(); // update the control to apply the new target
+
+        }
+
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            updateCameraOrbit(); 
+        }
+
+ 
+
+        function updateCameraOrbit() {
+            var forward = new THREE.Vector3();
+            camera.getWorldDirection(forward);
+            controls.target.copy(camera.position).add(forward);
+            controls.update(); 
+        }
+
+        function animate() {
+            // TWEEN.update(); // Update TWEEN animations
+            // let cp = camera.position
+            // camera.position.x += 0.1
+            // camera.position.y += 0.1
+            // camera.position.z -= 0.1
+            // alert(cp.x+ cp.y+ cp.z)
+            // camera.position.set(, 0, 5);
+        // gsap.to(camera.position, { x: 5, duration: 2 }); // move to x = 5 over 2 seconds
+
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+            controls.update(); // Update OrbitControls for damping and user interaction
+        }
+
+        function buildScene() {
+            // Ground Plane (+/-20 m)
+            var planeGeometry = new THREE.PlaneGeometry(50, 50, 50, 50);
+            var material = new THREE.MeshBasicMaterial({
+                color: 0xaaaaaa,
+                wireframe: true
+            });
+            var plane = new THREE.Mesh(planeGeometry, material);
+            plane.rotateX(Math.PI / 2); // Rotate to be horizontal
+            scene.add(plane);
+
+            scene.scale.z = -1;
+
+            // path dots
+            load_path_data();
+
+            ///////// update
+            // let path_option = document.getElementById("path_opt").innerHTML;
+            let path_option = localStorage.getItem("myDivContent");
+            // alert(path_option)
+            if (path_option == "1"){
+                // alert("direct in")
+                load_path_data_den1();    
+            }
+            else if (path_option=="2"){
+                // alert("shift in")
+                load_path_data_den2();    
+            }
+            
+            load_floor();
+            load_obstacles();
+
+            let gps_interval = 500
+            setInterval(update_state, gps_interval)
+            
+            // scene.add(new THREE.AxesHelper(5));
+
+            load_ar_dis()
+
+            // const PLY_FILE_URL = 'path/to/your/model.ply';
+            // loadPLYModel();
+
+            // const OBJ_FILE_URL = 'static/cad.obj';     
+            // loadOBJModel();   
+
+
+
+
+        }
+
+        function load_ar_dis(){
+            fetch('/ar_test.json') 
+            .then(response => response.json())
+            .then(val => {
+                document.getElementById("ardis").innerHTML = "Distance from spot: " + parseFloat(val).toFixed(3) + " (m)";
+            })
+
+            .catch(err => {
+              console.error('Error fetching path data:', err);
+            });
+        }
+
+
+
+
+        // 
+        function load_path_data(){
+
+            let post_p = [0,0]
+
+            fetch('/path_ll.json') 
+            .then(response => response.json())
+            .then(points => {
+                
+                for (let i = 0; i < points.length; i++) {
+                    // if (i==0 || i==2 || i==3){
+                    // if (i==0 || i==3){
+                    let x = points[i][0]
+                    let y = points[i][1]
+                    let h = points[i][2]
+
+                    if (i<4){
+                        
+                        planed_path_points.push([x, y, h])    
+                    }
+                    else if (i==4){
+                        post_p = [x,y,h]
+                    }
+                    
+                }
+                console.log("load path", planed_path_points)
+
+                // render path to scene
+                var cubes2 = [];
+                // console.log("path:", planed_path_points)
+                let path_dot_rad = 0.4
+                
+                for (var i = 0; i < planed_path_points.length; i++) {
+                    let geo = new THREE.SphereGeometry(
+                       path_dot_rad
+                    );
+                    let mat = new THREE.MeshBasicMaterial({ 
+                        wireframe: false,
+                        transparent: true, 
+                        opacity: 0.5, 
+                        color: new THREE.Color(0x00ff00)
+                    }); 
+                    const cube = new THREE.Mesh(geo, mat);
+                    cubes2.push(cube);
+                }
+                // console.log("path cubes", cubes2)
+
+                cubes2.forEach((c, index) => {
+                    c.position.x = planed_path_points[index][0]; 
+                    c.position.z = planed_path_points[index][1]; 
+                    c.position.y = 0;
+                    scene.add(c);
+                });
+
+                // render post point
+                let geo_post = new THREE.SphereGeometry(
+                   path_dot_rad/2
+                );
+                let mat_post = new THREE.MeshBasicMaterial({ 
+                    wireframe: false,
+                    transparent: true, 
+                    opacity: 0.5, 
+                    color: new THREE.Color(0xffff00)
+                }); 
+                const cube_post = new THREE.Mesh(geo_post, mat_post);
+                cube_post.position.x = post_p[0]; 
+                cube_post.position.z = post_p[1]; 
+                cube_post.position.y = 0;
+                scene.add(cube_post);
+
+
+                // render parking spot
+                var parking_spot = planed_path_points[planed_path_points.length-1];
+                let psp_heading = parking_spot[2];
+                // alert(parking_spot)
+                let spot_whd = [2.74*0.9, 1*0.9, 5.42*0.9]; // 
+                let geo2 = new THREE.BoxGeometry(
+                    spot_whd[0],    // width
+                    spot_whd[1]/2,   // height
+                    spot_whd[2]     // depth
+                );
+                let mat2 = new THREE.MeshBasicMaterial({ 
+                    wireframe: true,
+                    transparent: true, 
+                    opacity: 0.5
+                });
+                mat2.color = new THREE.Color(0xffff00); 
+                const psp = new THREE.Mesh(geo2, mat2);
+                psp.position.x = parking_spot[0]; 
+                psp.position.z = parking_spot[1]; 
+                psp.geometry.computeBoundingBox(); 
+                psp.position.y = (psp.geometry.boundingBox.max.y - psp.geometry.boundingBox.min.y) / 2;
+                const psp_rot = THREE.MathUtils.degToRad(psp_heading);
+                psp.rotation.y = psp_rot;
+                scene.add(psp);
+
+
+
+
+                // render vehicle (body+frame)
+                // var veh_g = planed_path_points[0];
+                // let veh_heading_init = veh_g[2]
+                // let veh_whd = [2.196,1.976,4.999];
+                // let geo3 = new THREE.BoxGeometry(
+                //     veh_whd[0],    // width
+                //     veh_whd[1],    // height
+                //     veh_whd[2]     // depth
+                // );
+                
+                // let mat3 = new THREE.MeshBasicMaterial({ 
+                //     wireframe: false,
+                //     transparent: true, 
+                //     opacity: 0.3
+                // });
+                // mat3.color = new THREE.Color(0xff00ff); 
+                // let veh = new THREE.Mesh(geo3, mat3);
+                // veh.position.x = veh_g[0];
+                // veh.position.z = veh_g[1];
+                // veh.position.y = veh_whd[1]/2
+                // let veh_rot = THREE.MathUtils.degToRad(veh_heading_init);
+                // veh.rotation.y = veh_rot;
+                // scene.add(veh);
+
+                // let mat4 = new THREE.MeshBasicMaterial({ 
+                //     wireframe: true,
+                //     transparent: true, 
+                //     opacity: 0.9
+                // });
+                // mat4.color = new THREE.Color(0xff00ff); 
+                // let veh2 = new THREE.Mesh(geo3, mat4);
+                // veh2.position.x = veh_g[0];
+                // veh2.position.z = veh_g[1];
+                // veh2.position.y = veh_whd[1]/2
+                // veh2.rotation.y = veh_rot;
+                // scene.add(veh2);
+
+
+                // render vehicle (body+frame as sphere)
+                var veh_g = planed_path_points[0];
+                let veh_heading_init = veh_g[2]
+                let veh_whd = [2.196,1.976,4.999];
+                let geo3 = new THREE.SphereGeometry(
+                   veh_whd[1]/2
+                );
+                
+                let mat3 = new THREE.MeshBasicMaterial({ 
+                    wireframe: false,
+                    transparent: true, 
+                    opacity: 0.3
+                });
+                mat3.color = new THREE.Color(0xff00ff); 
+                let veh = new THREE.Mesh(geo3, mat3);
+                veh.position.x = veh_g[0];
+                veh.position.z = veh_g[1];
+                veh.position.y = veh_whd[1]/2
+                let veh_rot = THREE.MathUtils.degToRad(veh_heading_init);
+                veh.rotation.y = veh_rot;
+                // scene.add(veh);
+
+                let mat4 = new THREE.MeshBasicMaterial({ 
+                    wireframe: true,
+                    transparent: true, 
+                    opacity: 0.9
+                });
+                mat4.color = new THREE.Color(0xff00ff); 
+                let veh2 = new THREE.Mesh(geo3, mat4);
+                veh2.position.x = veh_g[0];
+                veh2.position.z = veh_g[1];
+                veh2.position.y = veh_whd[1]/2
+                veh2.rotation.y = veh_rot;
+                // scene.add(veh2);
+
+
+                // cust veh frame
+                // add_vehicle([0,0], veh_g[2])
+                // add_vehicle2([0,0], veh_g[2])
+                // load_car_model_hummer([0,0], veh_g[2]);
+
+            })
+
+
+            .catch(err => {
+              console.error('Error fetching path data:', err);
+            });
+            
+        }
+
+        function rm_pre_veh(){
+          scene.children.forEach((obj)=>{
+              if (obj.name && obj.name.startsWith("veh_fra")){
+                  try{
+                    scene.remove(obj);
+                    obj.geometry.dispose();
+                    obj.material.dispose();
+                  }catch(e){
+
+                  }
+              }
+          });
+        }
+
+        function add_vehicle2(loc, turn_angle){
+          // rm
+          // rm_pre_veh();
+          load_car_model_hummer(loc, turn_angle)
+        }
+
+        function load_car_model_hummer(loc, turn_angle){
+
+          // obj and mtl
+          const mtlLoader = new MTLLoader();
+          mtlLoader.load('./static/hummer.mtl', (materials) => {
+            materials.preload();
+
+            // Then load the OBJ with the materials
+            const objLoader = new OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.load('./static/hummer.obj', (object) => {
+              object.scale.set(0.4, 0.4, 0.4);
+              object.position.set(loc[0], 0, loc[1]);
+              object.rotation.y = turn_angle * (Math.PI / 180); 
+              setObjectOpacity(object, 0.8);
+              object.name = "veh_fra_hummer"+real_veh_loc_history.length.toString();
+
+              eh_model = object;
+
+              if (currentVehicleHum) {
+                  rm_pre_veh();
+              }
+
+              scene.add(object);
+
+              currentVehicleHum = object;
+            });
+          });
+        }
+
+        function update_model_hummer(loc, turn_angle){
+
+          eh_model.position.x = loc[0]; 
+          eh_model.position.z = loc[1];
+          eh_model.rotation.y = turn_angle * (Math.PI / 180);   
+         
+        }
+
+        function setObjectOpacity(object, alpha) {
+            // Traverse all children of the loaded object
+            object.traverse((child) => {
+                if (child.isMesh) {
+                    // Handle single material or an array of materials (MultiMaterial)
+                    const materials = Array.isArray(child.material) ? child.material : [child.material];
+                    
+                    materials.forEach(material => {
+                        // 1. CRITICAL: Enable transparency
+                        material.transparent = true;
+                        
+                        // 2. Set the desired opacity value
+                        material.opacity = alpha;
+                        
+                        // 3. Ensure changes are registered by Three.js
+                        material.needsUpdate = true; 
+                    });
+                }
+            });
+        }
+
+        function add_vehicle(loc, turn_angle){
+
+          rm_pre_veh();
+
+          let group = new THREE.Group();
+
+          // Vehicle frame points 
+          const slimFactor = 0.8; // adjust to taste, less than 1 makes it slimmer
+          let dx = loc[0];
+          let dz = loc[1];
+
+          // rot + scale
+          const SCALE_FACTOR = 0.4;
+          const ROTATION_ANGLE_DEG = turn_angle; 
+          const ROTATION_AXIS = 'y';
+
+
+          const points_raw = [
+
+            // Base chassis (front to back, left to right) - scale x by slimFactor
+            [-2.5 * slimFactor, 0, -4], [-1.5 * slimFactor, 0, -4], [1.5 * slimFactor, 0, -4], [2.5 * slimFactor, 0, -4],     
+            [-2.7 * slimFactor, 0, -1.5], [-1.7 * slimFactor, 0, -1.5], [1.7 * slimFactor, 0, -1.5], [2.7 * slimFactor, 0, -1.5], 
+            [-2.7 * slimFactor, 0, 1.5], [-1.7 * slimFactor, 0, 1.5], [1.7 * slimFactor, 0, 1.5], [2.7 * slimFactor, 0, 1.5],     
+            [-2.5 * slimFactor, 0, 4], [-1.5 * slimFactor, 0, 4], [1.5 * slimFactor, 0, 4], [2.5 * slimFactor, 0, 4],             
+
+            // Arch roofline points (arched along z-axis)
+            [-1.5 * slimFactor, 1.8, -3.5], [-1.0 * slimFactor, 2.4, -2], [-0.5 * slimFactor, 2.7, 0], [0.5 * slimFactor, 2.7, 0], [1.0 * slimFactor, 2.4, -2], [1.5 * slimFactor, 1.8, -3.5],
+            [-1.5 * slimFactor, 1.8, 3.5], [-1.0 * slimFactor, 2.4, 2], [-0.5 * slimFactor, 2.7, 0], [0.5 * slimFactor, 2.7, 0], [1.0 * slimFactor, 2.4, 2], [1.5 * slimFactor, 1.8, 3.5],
+
+            // Side pillars (connect roof to base)
+            [-2.5 * slimFactor, 0, -4], [-1.5 * slimFactor, 1.8, -3.5],
+            [2.5 * slimFactor, 0, -4], [1.5 * slimFactor, 1.8, -3.5],
+            [-2.5 * slimFactor, 0, 4], [-1.5 * slimFactor, 1.8, 3.5],
+            [2.5 * slimFactor, 0, 4], [1.5 * slimFactor, 1.8, 3.5],
+
+            // Wheel arches simplified (front and rear)
+            [-2.3 * slimFactor, 0.5, -3.5], [-1.5 * slimFactor, 0.7, -3.5], [1.5 * slimFactor, 0.7, -3.5], [2.3 * slimFactor, 0.5, -3.5],  
+            [-2.3 * slimFactor, 0.5, 3.5],  [-1.5 * slimFactor, 0.7, 3.5],  [1.5 * slimFactor, 0.7, 3.5],  [2.3 * slimFactor, 0.5, 3.5],  
+          ];
+
+
+            // Edges to connect points (by indices in points_v)
+            const edges = [
+              // Front bumper
+              [0,1],[1,2],[2,3],
+              // Mid front base
+              [0,4],[1,5],[2,6],[3,7],
+              [4,5],[5,6],[6,7],
+              // Mid rear base
+              [4,8],[5,9],[6,10],[7,11],
+              [8,9],[9,10],[10,11],
+              // Rear bumper
+              [8,12],[9,13],[10,14],[11,15],
+              [12,13],[13,14],[14,15],
+
+              // Arch roofline (front left to right)
+              [16,17],[17,18],[18,19],[19,20],[20,21],
+
+              // Arch roofline (rear left to right)
+              [22,23],[23,24],[24,25],[25,26],[26,27],
+
+              // Roof connectors to pillars (front left)
+              [16,28],[17,28],
+              // Roof connectors to pillars (front right)
+              [21,29],[20,29],
+              // Roof connectors to pillars (rear left)
+              [22,30],[23,30],
+              // Roof connectors to pillars (rear right)
+              [27,31],[26,31],
+
+              // Side pillars down to base
+              [28,0],[29,3],[30,12],[31,15],
+
+              // Wheel arches (simplified)
+              [32,33],[33,34],[34,35],
+              [36,37],[37,38],[38,39],
+            ];
+
+          // loc
+          function movePoints(points, dx = 0, dy = 0, dz = 0) {
+            return points.map(([x, y, z]) => [x + dx, y + dy, z + dz]);
+          }
+
+          // let points_v = movePoints(points_raw, dx/SCALE_FACTOR, 0, dz/SCALE_FACTOR);
+          let points_v = movePoints(points_raw, 0, 0, 0);
+
+         
+          // === FUNCTION: Transform Points ===
+          function transformPoints(points, scale, angleDeg, axis) {
+            const angleRad = THREE.MathUtils.degToRad(angleDeg);
+            const euler = new THREE.Euler();
+            if (axis === 'x') euler.set(angleRad, 0, 0);
+            else if (axis === 'y') euler.set(0, angleRad, 0);
+            else if (axis === 'z') euler.set(0, 0, angleRad);
+
+            return points.map(p =>
+              new THREE.Vector3(...p).multiplyScalar(scale).applyEuler(euler)
+            );
+          }
+
+          function transformPoints2(points, scale, angleDeg, axis, dx = 0, dz = 0) {
+            const angleRad = THREE.MathUtils.degToRad(angleDeg);
+            const euler = new THREE.Euler();
+
+            if (axis === 'x') euler.set(angleRad, 0, 0);
+            else if (axis === 'y') euler.set(0, angleRad, 0);
+            else if (axis === 'z') euler.set(0, 0, angleRad);
+
+            const translation = new THREE.Vector3(dx, 0, dz);
+
+            return points.map(p => {
+              return new THREE.Vector3(...p)
+                .multiplyScalar(scale)   // scale
+                .applyEuler(euler)       // rotate
+                .add(translation);       // move
+            });
+          }
+
+          // === TRANSFORMED POINTS ===
+          const vectorPoints = transformPoints2(points_v, SCALE_FACTOR, ROTATION_ANGLE_DEG, ROTATION_AXIS, dx, dz);
+
+          // === CREATE GEOMETRY ===
+          const geometry_v = new THREE.BufferGeometry();
+          const lineVertices = [];
+
+          edges.forEach(([i1, i2]) => {
+            lineVertices.push(...vectorPoints[i1].toArray(), ...vectorPoints[i2].toArray());
+          });
+
+          geometry_v.setAttribute('position', new THREE.Float32BufferAttribute(lineVertices, 3));
+
+          // === MATERIAL + MESH ===
+          const material_v = new THREE.LineBasicMaterial({ color: 0xffffff });
+          const frame_v = new THREE.LineSegments(geometry_v, material_v);
+          // frame_v.name = "veh_fra_body"+real_veh_loc_history.length.toString()
+          // scene.add(frame_v);
+          group.add(frame_v);
+
+        
+          // Create wheel geometry (rotated so it's upright)
+          const angleRad = THREE.MathUtils.degToRad(ROTATION_ANGLE_DEG);
+          const euler = new THREE.Euler();
+
+          if (ROTATION_AXIS === 'x') euler.set(angleRad, 0, 0);
+          else if (ROTATION_AXIS === 'y') euler.set(0, angleRad, 0);
+          else if (ROTATION_AXIS === 'z') euler.set(0, 0, angleRad);
+
+          
+          const wheelRadius = 0.6 * SCALE_FACTOR;
+          const wheelThickness = 0.4 * SCALE_FACTOR;
+          const wheelMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
+
+          const wheelGeo = new THREE.CylinderGeometry(wheelRadius, wheelRadius, wheelThickness, 16);
+          wheelGeo.rotateZ(Math.PI / 2); // Rotate so flat faces are vertical
+
+
+          // Wheel positions: [x, y, z]
+          const wheelPositions_raw = [
+            [-2.0, 0.3, -3.0], // front left
+            [2.0, 0.3, -3.0],  // front right
+            [-2.0, 0.3, 3.0],  // rear left
+            [2.0, 0.3, 3.0],   // rear right
+          ];
+
+          // let wheelPositions = movePoints(wheelPositions_raw, dx/SCALE_FACTOR, 0, dz/SCALE_FACTOR);
+          let wheelPositions = movePoints(wheelPositions_raw, 0, 0, 0);
+          const translation = new THREE.Vector3(dx, 0, dz);
+
+          wheelPositions.forEach((pos,i) => {
+            // Apply transform to position
+            const posVec = new THREE.Vector3(...pos)
+              .multiplyScalar(SCALE_FACTOR)
+              .applyEuler(euler)
+              .add(translation); 
+
+            // Create and place the wheel
+            const wheel = new THREE.Mesh(wheelGeo.clone(), wheelMaterial);
+            wheel.position.copy(posVec);
+
+            // Also rotate the wheel to match car rotation
+            wheel.rotation.copy(euler);
+
+            // wheel.name = "veh_fra_wheel_"+i+"_"+real_veh_loc_history.length.toString()
+            // scene.add(wheel);
+            group.add(wheel);
+
+          });
+
+          // light
+           const lightPositions_raw = [
+            [-1.0, 0.8, 3.8], // front left
+            [1.0, 0.8, 3.8],  // front right
+          ];
+
+          // let lightPositions = movePoints(lightPositions_raw, dx/SCALE_FACTOR, 0, dz/SCALE_FACTOR);
+          let lightPositions = movePoints(lightPositions_raw, 0, 0, 0);
+
+
+          const lightMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000});
+          const lightGeo = new THREE.SphereGeometry(0.18);
+
+          
+          lightPositions.forEach((pos,i) => {
+            // Apply transform to position
+            const posVec = new THREE.Vector3(...pos)
+            .multiplyScalar(SCALE_FACTOR)
+            .applyEuler(euler)
+            .add(translation); 
+
+            // Create and place the wheel
+            const light = new THREE.Mesh(lightGeo.clone(), lightMaterial);
+            light.position.copy(posVec);
+
+            // Also rotate the wheel to match car rotation
+            light.rotation.copy(euler);
+
+            // light.name = "veh_fra_light_"+i+"_"+real_veh_loc_history.length.toString()
+            // scene.add(light);
+            group.add(light);
+
+          });
+          group.name = "veh_fra"+real_veh_loc_history.length.toString();
+          scene.add(group);
+        }
+
+
+        function load_phone_loc(){
+
+            fetch('/phone_local.json') 
+            .then(response => response.json())
+            .then(points => {
+
+                let x = points[0].toFixed(2)
+                let y = points[1].toFixed(2)
+
+                let cur_dis = Math.sqrt((x-target_loc_n_head[0])*(x-target_loc_n_head[0])+(y-target_loc_n_head[1])*(y-target_loc_n_head[1])).toFixed(2);
+
+                // document.getElementById("ardis").innerHTML = "Phone slam: Loc (m): ("+x+", "+y+")"+ " | "+cur_dis;
+
+                // remove previous dots
+                scene.children.forEach((obj)=>{
+                    if (obj.name && obj.name.startsWith("phone")){
+                        scene.remove(obj);
+                        obj.geometry.dispose();
+                        obj.material.dispose();
+                    }
+                });
+
+
+                let phone_dot_rad = 0.5
+                let geo = new THREE.BoxGeometry(
+                    phone_dot_rad,
+                    phone_dot_rad,
+                    phone_dot_rad     // depth
+                );
+                
+
+                let mat = new THREE.MeshBasicMaterial({ 
+                    wireframe: false,
+                    transparent: true, 
+                    opacity: 0.7,
+                    color: new THREE.Color(0xffff00)
+                });
+                const c = new THREE.Mesh(geo, mat);
+                
+                c.position.x = x; 
+                c.position.z = y; 
+                c.position.y = 0;
+                c.name = "phone"
+                // scene.add(c); // remove phone realtime location
+
+            })
+
+
+            .catch(err => {
+              console.error('Error fetching path data:', err);
+            });
+            
+        }
+
+
+        function load_uwb_loc(){
+
+            // remove previous dots
+            for (let i = scene.children.length - 1; i >= 0; i--) {
+                const obj = scene.children[i];
+                if (obj.name && obj.name.startsWith("uwb")) {
+                    scene.remove(obj);
+                    if (obj.geometry) obj.geometry.dispose();
+                    if (obj.material) obj.material.dispose();
+                }
+            }
+
+
+            fetch('/veh_local_uwb.json') 
+            .then(response => response.json())
+            .then(points => {
+                
+                let x = points[0][0].toFixed(2)
+                let y = points[0][1].toFixed(2)
+                let x0 = points[0][2].toFixed(2)
+                let y0 = points[0][3].toFixed(2)
+                let a1x = points[0][4].toFixed(2)
+                let a1y = points[0][5].toFixed(2)
+                let a2x = points[0][6].toFixed(2)
+                let a2y = points[0][7].toFixed(2)
+                let d1 = points[0][8].toFixed(2)
+                let d2 = points[0][9].toFixed(2)
+                let uv_heading = parseInt(points[0][10])
+                let camx = points[0][11];
+                let camy = points[0][12];
+                let valid = points[0][13];
+                
+
+                let uv_rot = THREE.MathUtils.degToRad(uv_heading);
+                // alert(uv_rot)
+                console.log(points)
+                
+
+
+                if (valid=="N"){
+                    return;
+                }
+                
+                let cur_dis = Math.sqrt((x-target_loc_n_head[0])*(x-target_loc_n_head[0])+(y-target_loc_n_head[1])*(y-target_loc_n_head[1])).toFixed(2);
+
+                // document.getElementById("uwb").innerHTML = "UWB: Loc (m): ("+x+", "+y+")"+ " | "+cur_dis + " | to veh coor: ("+x0+","+y0+")";
+
+                
+
+
+                let phone_dot_rad = 0.5
+                let geo = new THREE.BoxGeometry(
+                    phone_dot_rad,
+                    phone_dot_rad,
+                    phone_dot_rad     // depth
+                );
+
+                let mat = new THREE.MeshBasicMaterial({ 
+                    wireframe: false,
+                    transparent: true, 
+                    opacity: 0.7,
+                    color: new THREE.Color(0x00ff00)
+                });
+                const c = new THREE.Mesh(geo, mat);
+                
+                c.position.x = x; 
+                c.position.z = y; 
+                c.position.y = 0;
+                c.name = "uwb_veh"
+                scene.add(c);
+
+
+
+                // anchors and debugging
+                let anc1_rad = d1
+
+                const curve1 = new THREE.EllipseCurve(
+                  0, 0,            // center
+                  anc1_rad, anc1_rad,            // xRadius, yRadius
+                  0, 2 * Math.PI,  // full circle
+                  false,           // clockwise
+                  0                // rotation
+                );
+
+                // Get points and explicitly **close the loop**
+                const points1 = curve1.getPoints(100);
+                points1.push(points1[0]); // ensure closure
+
+                const geometry1 = new THREE.BufferGeometry().setFromPoints(points1);
+                const material1 = new THREE.LineBasicMaterial({ 
+                    color: 0x00ff00,
+                    transparent: true,
+                    opacity: 0.5 
+                });
+
+                const c1= new THREE.Line(geometry1, material1); // Line (not LineLoop)
+             
+                // Rotate to face up (XY plane)
+                c1.rotation.x = -Math.PI / 2;
+
+                c1.position.x = a1x; 
+                c1.position.z = a1y; 
+                c1.position.y = 0;
+                c1.name = "uwb_anc1"
+                scene.add(c1);
+
+                let geo_a1_cen = new THREE.SphereGeometry(
+                   0.1
+                );
+                
+                let mat_a1_cen = new THREE.MeshBasicMaterial({ 
+                    wireframe: false,
+                    transparent: false, 
+                    // opacity: 0.7,
+                    color: new THREE.Color(0x00ff00)
+                });
+                const c1_cen= new THREE.Line(geo_a1_cen, mat_a1_cen); // Line (not LineLoop)
+             
+                c1_cen.position.x = a1x; 
+                c1_cen.position.z = a1y; 
+                c1_cen.position.y = 0;
+                c1_cen.name = "uwb_anc1_c"
+                scene.add(c1_cen);
+
+                const l1_points = [];
+                l1_points.push(new THREE.Vector3(camx, 0, camy)); // start point
+                l1_points.push(new THREE.Vector3(a1x, 0, a1y)); // end point
+                const l1_geometry = new THREE.BufferGeometry().setFromPoints(l1_points);
+                const l1_material = new THREE.LineBasicMaterial({ color: 0x00ff00 });
+                const line1 = new THREE.Line(l1_geometry, l1_material);
+                line1.name = "uwb_anc1_line"
+                scene.add(line1);
+
+
+              
+                // anc 2
+                let anc2_rad = d2
+
+                const curve2 = new THREE.EllipseCurve(
+                  0, 0,            // center
+                  anc2_rad, anc2_rad,            // xRadius, yRadius
+                  0, 2 * Math.PI,  // full circle
+                  false,           // clockwise
+                  0                // rotation
+                );
+
+                // Get points and explicitly **close the loop**
+                const points2 = curve2.getPoints(100);
+                points2.push(points2[0]); // ensure closure
+
+                const geometry2 = new THREE.BufferGeometry().setFromPoints(points2);
+                const material2 = new THREE.LineBasicMaterial({ 
+                    color: 0x00ff00,
+                    transparent: true,
+                    opacity: 0.5 
+                });
+
+                const c2 = new THREE.Line(geometry2, material2); // Line (not LineLoop)
+             
+                // Rotate to face up (XY plane)
+                c2.rotation.x = -Math.PI / 2;
+
+
+                c2.position.x = a2x; 
+                c2.position.z = a2y; 
+                c2.position.y = 0;
+                c2.name = "uwb_anc2"
+                scene.add(c2);
+
+                let geo_a2_cen = new THREE.SphereGeometry(
+                   0.1
+                );
+                
+                let mat_a2_cen = new THREE.MeshBasicMaterial({ 
+                    wireframe: false,
+                    // transparent: true, 
+                    opacity: 0.7,
+                    color: new THREE.Color(0x00ff00)
+                });
+                const c2_cen= new THREE.Line(geo_a2_cen, mat_a2_cen); // Line (not LineLoop)
+             
+                c2_cen.position.x = a2x; 
+                c2_cen.position.z = a2y; 
+                c2_cen.position.y = 0;
+                c2_cen.name = "uwb_anc2_c"
+                // c2_cen.rotation.y = -uv_rot;
+                scene.add(c2_cen);
+
+                const l2_points = [];
+                l2_points.push(new THREE.Vector3(camx, 0, camy)); // start point
+                l2_points.push(new THREE.Vector3(a2x, 0, a2y)); // end point
+                const l2_geometry = new THREE.BufferGeometry().setFromPoints(l2_points);
+                const l2_material = new THREE.LineBasicMaterial({ color: 0x00ff00 });
+                const line2 = new THREE.Line(l2_geometry, l2_material);
+                line2.name = "uwb_anc2_line"
+                scene.add(line2);
+
+
+
+
+
+                // add est veh body
+
+                var uwb_est_v = [x,y]
+                let veh_whd = [2.196,1.976,4.999];
+                let geov = new THREE.BoxGeometry(
+                    veh_whd[0],    // width
+                    0.1,   // height
+                    veh_whd[2]     // depth
+                );
+                let matv = new THREE.MeshBasicMaterial({ 
+                    wireframe: false,
+                    transparent: true, 
+                    opacity: 0.3
+                });
+                matv.color = new THREE.Color(0x00ff00); 
+                const uv = new THREE.Mesh(geov, matv);
+                uv.position.x = uwb_est_v[0]; 
+                uv.position.z = uwb_est_v[1]; 
+                uv.geometry.computeBoundingBox(); 
+                uv.position.y = (uv.geometry.boundingBox.max.y - uv.geometry.boundingBox.min.y) / 2;
+                // alert(uv_heading)
+                uv.rotation.y = uv_rot;
+
+                uv.name = "uwb_veh_body"
+                scene.add(uv);
+            
+            })
+
+
+
+            .catch(err => {
+              console.error('Error fetching path data:', err);
+            });
+            
+        }
+
+
+
+        
+
+        function rm_pre_path(){
+            // rm pre path den
+            // alert("aa")   
+            scene.children.forEach((obj)=>{
+                // alert(obj.name)
+                if (obj.name && obj.name.startsWith("pi_")){
+                    scene.remove(obj);
+                    obj.geometry.dispose();
+                    obj.material.dispose();
+                }
+            });
+        }
+
+
+         function load_path_data_den1(){
+
+            let planed_path_points_den1 = [];
+            rm_pre_path();
+            
+            fetch('/path_den1.json') 
+            .then(response => response.json())
+            .then(points => {
+                let p = points[points.length-1]
+                target_loc_n_head = p
+                let post_len = 100 // use 200 in between adjacent point before when less anchors are used
+                
+                for (let i = 0; i < points.length; i++) {
+                    let x = points[i][0]
+                    let y = points[i][1]
+                    let h = points[i][2]
+                    let gear = "f"
+                    if (points[i].length==4){
+                        gear = points[i][3]
+                    }   
+                    planed_path_points_den1.push([x, y, h, gear])    
+                
+                }
+                console.log("load path den", planed_path_points_den1)
+
+                // render path to scene
+                var cubes2 = [];
+                // console.log("path:", planed_path_points_den1)
+                let path_dot_rad = 0.1
+                
+                for (var i = 0; i < planed_path_points_den1.length; i++) {
+                    let geo = new THREE.SphereGeometry(
+                       path_dot_rad
+                    );
+                    
+                    let mat = new THREE.MeshBasicMaterial({ 
+                        wireframe: false,
+                        transparent: true, 
+                        opacity: 0.5,
+                        color: new THREE.Color(0x00ff00)
+                    
+                    });
+                    if (planed_path_points_den1[i][3]=="r"){
+                        mat.color = new THREE.Color(0x00ffff); 
+                    }
+
+                    if(i>planed_path_points_den1.length-post_len){
+                        mat.opacity = 0.5
+                        mat.color = new THREE.Color(0xffffff)
+                        geo = new THREE.SphereGeometry(path_dot_rad/2);
+                    } 
+
+                    const cube = new THREE.Mesh(geo, mat);
+                    cube.name = "pi_den1_"+i.toString();
+                    cubes2.push(cube);
+                }
+
+                // console.log("path cubes", cubes2)
+
+                cubes2.forEach((c, index) => {
+                    c.position.x = planed_path_points_den1[index][0]; 
+                    c.position.z = planed_path_points_den1[index][1]; 
+                    c.position.y = 0;
+                    c.name = "pi_"+index.toString();
+                    scene.add(c); // comment no path show
+                    // console.log("pi ", c)
+                });
+
+            })
+
+            .catch(err => {
+              console.error('Error fetching path data:', err);
+            });
+            
+        }
+
+        function load_path_data_den2(){
+
+            rm_pre_path();
+            
+            let planed_path_points_den2 = [];
+            
+            fetch('/path_den2.json') 
+            .then(response => response.json())
+            .then(points => {
+                
+                for (let i = 0; i < points.length; i++) {
+                    let x = points[i][0]
+                    let y = points[i][1]
+                    let h = points[i][2]
+                    let gear = "f"
+                    if (points[i].length==4){
+                        gear = points[i][3]
+                    }
+                    planed_path_points_den2.push([x, y, h, gear])    
+                
+                }
+                console.log("load path den2", planed_path_points_den2)
+
+                // render path to scene
+                var cubes2 = [];
+                // console.log("path:", planed_path_points_den2)
+                let path_dot_rad = 0.1
+                
+                for (var i = 0; i < planed_path_points_den2.length; i++) {
+                    let geo = new THREE.SphereGeometry(
+                       path_dot_rad
+                    );
+                    let mat = new THREE.MeshBasicMaterial({ 
+                        wireframe: false,
+                        transparent: true, 
+                        opacity: 0.5, 
+                        color: new THREE.Color(0x00ff00)
+                    });
+                    if (planed_path_points_den2[i][3]=="r"){
+                        mat.color = new THREE.Color(0x00ffff); 
+                    }
+
+                    // multiple key anchors may not at middle
+                    // if (i==planed_path_points_den2.length/2){
+                    //     geo = new THREE.SphereGeometry(0.5);  
+                    //     mat.color = new THREE.Color(0xffffff)
+                    // }
+
+                    const cube = new THREE.Mesh(geo, mat);
+
+                    cube.name = "pi_den2_"+i.toString()
+                    cubes2.push(cube);
+                }
+                // console.log("path cubes", cubes2)
+
+                cubes2.forEach((c, index) => {
+                    c.position.x = planed_path_points_den2[index][0]; 
+                    c.position.z = planed_path_points_den2[index][1]; 
+                    c.position.y = 0;
+                    // c.name = "pi_"+index.toString()
+                    scene.add(c);
+                    // console.log(c)
+                });
+
+            })
+
+
+            .catch(err => {
+              console.error('Error fetching path data:', err);
+            });
+            
+        }
+
+        // window.load_path_data_den1 = load_path_data_den1
+        // window.load_path_data_den2 = load_path_data_den2
+        // window.rm_pre_path = rm_pre_path
+
+
+        function update_state(){
+            if (monitor=="CAN"){
+              update_curr_veh_can_gps();
+            }
+            else if (monitor=="UBLOX"){
+              update_curr_veh_ublox();
+            }
+            
+            update_can_h();
+            update_ublox_gps_btm();
+            // load_phone_loc();
+            // load_uwb_loc();
+            if (view_option==0){
+                // call only once, enable UI control
+                reset_three_view_bird();    
+            }
+            else if(view_option==1){
+                update_three_view_in_veh();
+            }
+
+            // check_stop();
+
+        }
+
+        
+
+        function update_can_h(){
+            fetch('/can_h.json') 
+            .then(response => response.json())
+            .then(data => {
+                let lat = parseFloat(data[0]).toFixed(6);
+                let lon = parseFloat(data[1]).toFixed(6);
+                let heading = data[2];
+                veh_heading_cur = heading;
+                let x = parseFloat(data[3]).toFixed(2);
+                let y = parseFloat(data[4]).toFixed(2);
+                let dis = parseFloat(data[5]).toFixed(2);
+                // document.getElementById("can_h").innerHTML = "CAN: "+lat+", " +lon+" | Head: "+ heading+" | Loc (m): ("+x+", "+y+")"+ " | "+dis ;
+                document.getElementById("can_h").innerHTML = "CAN heading (deg): "+ heading ;
+
+
+                // show realtime heading
+                scene.children.forEach((obj)=>{
+                    if (obj.name && obj.name.startsWith("veh_heading")){
+                        scene.remove(obj);
+                        obj.geometry.dispose();
+                        obj.material.dispose();
+                    }
+                });
+                
+                if (real_veh_loc_history.length<1){
+                    return;
+                }
+
+                let curr_loc = real_veh_loc_history[real_veh_loc_history.length-1]
+            
+                let geo_h = new THREE.BoxGeometry(
+                    0.1,    // width
+                    0.1,   // height
+                    2.0     // depth
+                );
+                let mat_h = new THREE.MeshBasicMaterial({ 
+                    wireframe: false,
+                    transparent: true, 
+                    opacity: 1.0
+                });
+                mat_h.color = new THREE.Color(0x000000); 
+                const ch = new THREE.Mesh(geo_h, mat_h);
+                
+                ch.position.x = curr_loc.position.x; 
+                ch.position.z = curr_loc.position.z; 
+                
+    
+                let veh_heading_rel = veh_heading_cur / 180 * Math.PI
+                ch.rotation.y = veh_heading_rel
+                ch.name = "veh_heading"+real_veh_loc_history.length.toString()
+
+                scene.add(ch); 
+
+    
+            })
+
+            .catch(err => {
+              console.error('Error fetching can heading data:', err);
+            });
+        }
+
+        function update_ublox_gps_btm(){
+            fetch('/ublox_gps.json') 
+            .then(response => response.json())
+            .then(data => {
+                let lat = parseFloat(data[0]).toFixed(6);
+                let lon = parseFloat(data[1]).toFixed(6);
+                let x = parseFloat(data[2]).toFixed(2);
+                let y = parseFloat(data[3]).toFixed(2);
+                let dis = parseFloat(data[4]).toFixed(2);
+                // document.getElementById("ublox").innerHTML = "UBLOX: "+lat+", " +lon+" | Loc (m): ("+x+", "+y+")"+ " | "+dis ;
+                document.getElementById("ublox").innerHTML = "UBLOX (lat/lon): "+lat+", " +lon;
+            })
+
+            .catch(err => {
+              console.error('Error fetching can heading data:', err);
+            });
+
+        }
+
+        // function update_curr_veh(){
+
+        //     // fetch('/ublox.json') 
+        //     // fetch('/ublox2.json')
+        //     fetch('/ublox3.json') 
+        //     .then(response => response.json())
+        //     .then(point => {
+        //         console.log("cl", point)
+
+        //         // remove previous dots
+        //         // console.log("ublox2local history: ", real_veh_loc_history);
+        //         let veh_hist_len = real_veh_loc_history.length;
+        //         scene.children.forEach((obj)=>{
+        //             if (obj.name && obj.name.startsWith("veh_hist")){
+        //                 let idx = obj.name.split("_")[2]
+        //                 if (veh_hist_len-parseInt(idx)>=vis_his_len){
+        //                     scene.remove(obj);
+        //                     obj.geometry.dispose();
+        //                     obj.material.dispose();
+        //                 }
+        //                 else if (veh_hist_len-parseInt(idx)<vis_his_len && veh_hist_len-parseInt(idx)>0){
+        //                     obj.geometry = new THREE.SphereGeometry(0.2); 
+        //                     obj.material = new THREE.MeshBasicMaterial({ 
+        //                         wireframe: false,
+        //                         transparent: true, 
+        //                         opacity: 0.7,
+        //                         color: new THREE.Color(0xffaa00)
+        //                     }); 
+        //                 }
+        //             }
+        //         });
+
+
+        //         let veh_dot_rad = 0.3
+        //         let geo = new THREE.SphereGeometry(
+        //            veh_dot_rad
+        //         );
+
+        //         let mat = new THREE.MeshBasicMaterial({ 
+        //             wireframe: false,
+        //             transparent: true, 
+        //             opacity: 0.7,
+        //             color: new THREE.Color(0xff0000)
+        //         });
+        //         const c = new THREE.Mesh(geo, mat);
+                
+        //         c.position.x = point[0]; 
+        //         c.position.z = -point[1]; 
+        //         c.position.y = 0;
+        //         c.name = "veh_hist_"+real_veh_loc_history.length.toString()
+        //         scene.add(c);
+        //         real_veh_loc_history.push(c);
+        //         // console.log(c)
+
+        //     })
+
+
+        //     .catch(err => {
+        //       console.error('Error fetching ublox data:', err);
+        //     });
+
+
+        //     // update camera position based on current loc
+        //     // camera.position.z -= 1;
+        //     // controls.target.z -= 1;
+        //     // console.log("cam", camera.position
+            
+        // }
+
+
+        function update_curr_veh_ublox(){
+
+            fetch('/ublox3.json') 
+            .then(response => response.json())
+            .then(point => {
+                // console.log("cl", point)
+                let vcen = point[0]
+                let ant = point[1]
+
+                // alert(vcen, ant)
+
+
+                // remove previous dots
+                // console.log("ublox2local history: ", real_veh_loc_history);
+                let veh_hist_len = real_veh_loc_history.length;
+                scene.children.forEach((obj)=>{
+                    if (obj.name && obj.name.startsWith("veh_hist")){
+                        let idx = obj.name.split("_")[2]
+                        if (veh_hist_len-parseInt(idx)>=vis_his_len){
+                            scene.remove(obj);
+                            obj.geometry.dispose();
+                            obj.material.dispose();
+                        }
+                        else if (veh_hist_len-parseInt(idx)<vis_his_len && veh_hist_len-parseInt(idx)>0){
+                            obj.geometry = new THREE.SphereGeometry(0.2); 
+                            obj.material = new THREE.MeshBasicMaterial({ 
+                                wireframe: false,
+                                transparent: true, 
+                                opacity: 0.7,
+                                color: new THREE.Color(0xffaa00)
+                            }); 
+                        }
+                    }
+                });
+
+                let ant_hist_len = ant_loc_history.length;
+                scene.children.forEach((obj)=>{
+                    if (obj.name && obj.name.startsWith("ant_hist")){
+                        // let idx = obj.name.split("_")[2]
+                        // if (ant_hist_len-parseInt(idx)>=ant_his_len){
+                            scene.remove(obj);
+                            obj.geometry.dispose();
+                            obj.material.dispose();
+                        // }
+                    }
+                });
+
+                // veh center
+                let veh_dot_rad = 0.3
+                let geo = new THREE.SphereGeometry(
+                   veh_dot_rad
+                );
+
+                let mat = new THREE.MeshBasicMaterial({ 
+                    wireframe: false,
+                    transparent: true, 
+                    opacity: 0.7,
+                    color: new THREE.Color(0xff0000)
+                });
+                const c = new THREE.Mesh(geo, mat);
+                
+                c.position.x = vcen[0]; 
+                c.position.z = vcen[1]; 
+                c.position.y = 0;
+                c.name = "veh_hist_"+real_veh_loc_history.length.toString()
+                scene.add(c);
+                real_veh_loc_history.push(c);
+                // console.log(c)
+
+                // may meet 0 
+                if (veh_heading_cur!=-1){
+                  // add_vehicle([vcen[0], vcen[1]], veh_heading_cur);
+                  // add_vehicle2([vcen[0], vcen[1]], veh_heading_cur);
+                  update_model_hummer([vcen[0], vcen[1]], veh_heading_cur);
+                }
+
+                // current heading
+                // const origin = new THREE.Vector3(5, 5, 0);
+                // const dir = new THREE.Vector3(1, 0, 0).normalize();  // pointing along +X
+                // const length = 2;
+                // const color = 0xffff00;
+                // const arrowHelper = new THREE.ArrowHelper(dir, origin, length, color);
+                // scene.add(arrowHelper);
+
+
+
+
+                // ublox antenna 
+                let ant_dot_rad = 0.2
+                let geo2 = new THREE.SphereGeometry(
+                   ant_dot_rad
+                );
+
+                let mat2 = new THREE.MeshBasicMaterial({ 
+                    wireframe: false,
+                    transparent: true, 
+                    opacity: 0.2,
+                    color: new THREE.Color(0xaaaaaa)
+                });
+                const c2 = new THREE.Mesh(geo2, mat2);
+                
+                c2.position.x = ant[0]; 
+                c2.position.z = ant[1]; 
+                c2.position.y = 0;
+                c2.name = "ant_hist_"+ant_loc_history.length.toString()
+                scene.add(c2);
+                ant_loc_history.push(c2);
+
+            })
+
+
+            .catch(err => {
+              console.error('Error fetching ublox data:', err);
+              document.getElementById("path_info").innerHTML = "Try reloading 3D model";
+              load_car_model_hummer([1000,1000],0);
+            });
+
+
+            // update camera position based on current loc
+            // camera.position.z -= 1;
+            // controls.target.z -= 1;
+            // console.log("cam", camera.position
+            
+        }
+
+
+        function update_curr_veh_can_gps(){
+
+            fetch('/can_gps.json') 
+            .then(response => response.json())
+            .then(point => {
+                console.log("cl", point)
+                let vcen = point[0]
+                let ant = point[1]
+
+                // remove previous dots
+                // console.log("ublox2local history: ", real_veh_loc_history);
+                let veh_hist_len = real_veh_loc_history.length;
+                scene.children.forEach((obj)=>{
+                    if (obj.name && obj.name.startsWith("veh_hist")){
+                        let idx = obj.name.split("_")[2]
+                        if (veh_hist_len-parseInt(idx)>=vis_his_len){
+                            scene.remove(obj);
+                            obj.geometry.dispose();
+                            obj.material.dispose();
+                        }
+                        else if (veh_hist_len-parseInt(idx)<vis_his_len && veh_hist_len-parseInt(idx)>0){
+                            obj.geometry = new THREE.SphereGeometry(0.2); 
+                            obj.material = new THREE.MeshBasicMaterial({ 
+                                wireframe: false,
+                                transparent: true, 
+                                opacity: 0.7,
+                                color: new THREE.Color(0xffaa00)
+                            }); 
+                        }
+                    }
+                });
+
+                let ant_hist_len = ant_loc_history.length;
+                scene.children.forEach((obj)=>{
+                    if (obj.name && obj.name.startsWith("ant_hist")){
+                        // let idx = obj.name.split("_")[2]
+                        // if (ant_hist_len-parseInt(idx)>=ant_his_len){
+                            scene.remove(obj);
+                            obj.geometry.dispose();
+                            obj.material.dispose();
+                        // }
+                    }
+                });
+
+                // veh center
+                let veh_dot_rad = 0.3
+                let geo = new THREE.SphereGeometry(
+                   veh_dot_rad
+                );
+
+                let mat = new THREE.MeshBasicMaterial({ 
+                    wireframe: false,
+                    transparent: true, 
+                    opacity: 0.7,
+                    color: new THREE.Color(0xff0000)
+                });
+                const c = new THREE.Mesh(geo, mat);
+                
+                c.position.x = vcen[0]; 
+                c.position.z = vcen[1]; 
+                c.position.y = 0;
+                c.name = "veh_hist_"+real_veh_loc_history.length.toString()
+                scene.add(c);
+                real_veh_loc_history.push(c);
+                // console.log(c)
+
+                // ublox antenna 
+                let ant_dot_rad = 0.2
+                let geo2 = new THREE.SphereGeometry(
+                   ant_dot_rad
+                );
+
+                let mat2 = new THREE.MeshBasicMaterial({ 
+                    wireframe: false,
+                    transparent: true, 
+                    opacity: 0.2,
+                    color: new THREE.Color(0xaaaaaa)
+                });
+                const c2 = new THREE.Mesh(geo2, mat2);
+                
+                c2.position.x = ant[0]; 
+                c2.position.z = ant[1]; 
+                c2.position.y = 0;
+                c2.name = "ant_hist_"+ant_loc_history.length.toString()
+                scene.add(c2);
+                ant_loc_history.push(c2);
+
+            })
+
+
+            .catch(err => {
+              console.error('Error fetching ublox data:', err);
+            });
+
+            
+        }
+
+
+
+
+
+        function load_obstacles(){
+
+            fetch('/obs_ll.json') 
+            .then(response => response.json())
+            .then(points => {
+                
+                let obstacles = []
+                for (let i = 0; i < points.length; i++) {
+                    let x = points[i][0]
+                    let y = points[i][1]
+                    let h = points[i][2]
+                    obstacles.push([x, y, h])
+
+                }
+                console.log("load obstacles", obstacles)
+                // alert(obstacles)
+
+                
+                // render path to scene
+                var cubes = [];
+                let obs_dot_rad = 0.2
+            
+                for (var i = 0; i < obstacles.length; i++) {
+
+                    let geo = new THREE.BoxGeometry(
+                        obs_dot_rad,    // width
+                        obstacles[i][2],    // height
+                        obs_dot_rad     // depth
+                    );
+
+                    let mat = new THREE.MeshBasicMaterial({ 
+                        wireframe: false,
+                        transparent: true, 
+                        opacity: 0.5
+                    });
+                    mat.color = new THREE.Color(0xff6600); 
+                    const cube = new THREE.Mesh(geo, mat);
+                    cubes.push(cube);
+                }
+                // console.log("path cubes", cubes2)
+
+                cubes.forEach((c, index) => {
+                    c.position.x = obstacles[index][0]; 
+                    c.position.z = obstacles[index][1]; 
+                    c.position.y = obstacles[index][2]/2;
+                    scene.add(c);
+                    // console.log(c)
+                });
+                
+
+
+                /* // add each cube 
+                const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, opacity: 0.7, transparent: true });
+                const boxSize = 0.1; // adjust for scale
+
+                obstacles.forEach(([x, y, h]) => {
+                    // Create a box for each obstacle
+                    const geometry = new THREE.BoxGeometry(boxSize, h, boxSize);
+                    const mesh = new THREE.Mesh(geometry, material);
+
+                    // Position it: assuming y = up-axis, so we raise it by h/2
+                    mesh.position.set(x, h, y);
+
+                    scene.add(mesh);
+                });
+                */
+       
+            })
+
+
+            .catch(err => {
+              console.error('Error fetching path data:', err);
+            });
+            
+        }
+
+
+
+
+        function load_floor(){
+
+            fetch('/floor_ll.json') 
+            .then(response => response.json())
+            .then(points => {
+                
+                let floor_ver = []
+                for (let i = 0; i < points.length; i++) {
+                    let x = points[i][0]
+                    let y = points[i][1]
+                    floor_ver.push([x, y])
+
+                }
+                console.log("load floor boundary", floor_ver)
+
+                // Create a shape
+                const shape = new THREE.Shape();
+                shape.moveTo(floor_ver[0][0], floor_ver[0][1]);
+
+                for (let i = 1; i < floor_ver.length; i++) {
+                    shape.lineTo(floor_ver[i][0], floor_ver[i][1]);
+                }
+                shape.lineTo(floor_ver[0][0], floor_ver[0][1]); // Close the shape
+
+                // Create geometry and mesh
+                const geometry = new THREE.ShapeGeometry(shape);
+                const material = new THREE.MeshBasicMaterial({ color: 0x00aaff, side: THREE.DoubleSide, transparent: true, opacity: 0.4});
+                const mesh = new THREE.Mesh(geometry, material);
+
+                // Rotate to XZ plane make it flat on the ground (XZ plane)
+                mesh.rotation.x = Math.PI / 2; 
+
+                scene.add(mesh);
+
+
+            })
+
+
+            .catch(err => {
+              console.error('Error fetching path data:', err);
+            });
+            
+        }
+
+
+        function loadPLYModel() {
+            const loader = new THREE.PLYLoader();
+            const statusElement = document.getElementById('status');
+            
+            statusElement.textContent = `Fetching PLY from: ${PLY_FILE_URL}`;
+
+            // Check if the URL is the placeholder
+            if (PLY_FILE_URL.includes('path/to/your/model.ply')) {
+                statusElement.innerHTML = '<strong>PLEASE UPDATE:</strong> Replace the `PLY_FILE_URL` in the JavaScript with your actual `.ply` file link.';
+                // Add a placeholder object since we cannot fetch the user's file
+                addPlaceholderCube();
+                return;
+            }
+
+            loader.load(
+                // resource URL
+                PLY_FILE_URL,
+                // onLoad callback
+                function (geometry) {
+                    statusElement.textContent = 'Model loaded successfully!';
+                    
+                    // PLY files can contain vertex colors. 
+                    // Use MeshStandardMaterial and check for vertex colors.
+                    const material = new THREE.MeshStandardMaterial({
+                        color: 0xffffff,
+                        vertexColors: geometry.hasAttribute('color'), // Use vertex colors if available
+                        flatShading: true 
+                    });
+
+                    mesh = new THREE.Mesh(geometry, material);
+                    mesh.rotation.x = -Math.PI / 2; // Often PLY models are Z-up, so rotate to Y-up
+                    scene.add(mesh);
+                    
+                    // Recenter camera to look at the loaded model
+                    geometry.computeBoundingBox();
+                    if (geometry.boundingBox) {
+                        const center = new THREE.Vector3();
+                        geometry.boundingBox.getCenter(center);
+                        controls.target.copy(center);
+                        
+                        const size = new THREE.Vector3();
+                        geometry.boundingBox.getSize(size);
+                        const maxDim = Math.max(size.x, size.y, size.z);
+                        
+                        // Adjust camera distance based on model size
+                        const fitDistance = maxDim * 1.5;
+                        camera.position.set(center.x, center.y, center.z + fitDistance);
+                        camera.far = fitDistance * 2;
+                        camera.updateProjectionMatrix();
+                    }
+
+                },
+                // onProgress callback
+                function (xhr) {
+                    const progress = (xhr.loaded / xhr.total) * 100;
+                    statusElement.textContent = `Loading: ${progress.toFixed(2)}%`;
+                },
+                // onError callback
+                function (error) {
+                    console.error('An error occurred while loading the PLY model:', error);
+                    statusElement.textContent = 'Error loading model. Check console for details.';
+                    addPlaceholderCube();
+                }
+            );
+        }
+
+
+         // --- Model Loading Function ---
+        function loadOBJModel() {
+            // Renamed from PLYLoader to OBJLoader
+            const loader = new THREE.OBJLoader();
+            // const statusElement = document.getElementById('status');
+            
+            // statusElement.textContent = `Fetching OBJ from: ${OBJ_FILE_URL}`;
+
+            // Check if the URL is the placeholder
+            if (OBJ_FILE_URL.includes('static/cad.obj')) {
+                addPlaceholderCube();
+                return;
+            }
+
+            loader.load(
+                // resource URL
+                OBJ_FILE_URL,
+                // onLoad callback
+                function (object) {
+                    
+                    object.traverse(function (child) {
+                        if (child.isMesh) {
+                            child.material = new THREE.MeshStandardMaterial({
+                                color: 0xcccccc,
+                                flatShading: true,
+                            });
+                        }
+                    });
+
+                    mesh = object; // 'mesh' now refers to the loaded object group
+                    scene.add(mesh);
+                    
+                    // Recenter camera to look at the loaded model
+                    const box = new THREE.Box3().setFromObject(mesh);
+                    const center = new THREE.Vector3();
+                    box.getCenter(center);
+                    controls.target.copy(center);
+                    
+                    const size = new THREE.Vector3();
+                    box.getSize(size);
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    
+                    // Adjust camera distance based on model size
+                    const fitDistance = maxDim * 1.5;
+                    camera.position.set(center.x, center.y, center.z + fitDistance);
+                    camera.far = fitDistance * 2;
+                    camera.updateProjectionMatrix();
+
+                },
+                // onProgress callback
+                function (xhr) {
+                    const progress = (xhr.loaded / xhr.total) * 100;
+                },
+                // onError callback
+                function (error) {
+                    addPlaceholderCube();
+                }
+            );
+        }
+
+        // Fallback for when the file cannot be loaded
+        function addPlaceholderCube() {
+            const geometry = new THREE.BoxGeometry(2, 2, 2);
+            const material = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+            mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+        }
+
+
+
+
+    </script>
+</body>
+
+<script type="text/javascript">
+
+      function load_all_paths(){
+        fetch('/load_all_paths') 
+            .then(response => response.json())
+            .then(paths => {
+                // let paths = JSON.parse(paths).echo
+                let content = "";
+                for (i=0; i<paths.echo.length; i++){
+                  content += "<li class='toggle-button' onclick='load_path_spe(this)'>"+paths.echo[i]+"</li>"
+                }
+
+                document.getElementById("button-list").innerHTML = content;
+                
+                console.log("pre paths", paths)
+                // alert(content)
+
+            })
+
+            .catch(err => {
+              console.error('Error fetching paths data:', err);
+            });
+      }
+
+      function load_path_spe(element) {
+          const date = element.innerHTML;
+          let data = { 'date': date };
+
+          fetch('/load_path_spe', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify(data)            
+          })
+          .then(response => response.json())     
+          .then(result => {
+            console.log("Server response:", result);
+            let feedback = result.status;
+            document.getElementById("path_info").innerHTML = "Load path " + feedback;
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+
+      
+      function start_exc(){
+         
+         // alert("aaa")
+         sendData()
+
+          function sendData() {
+            const data = "start";
+            fetch('/start_exc', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'text/plain'  // or 'application/json' if needed
+              },
+              body: data
+            })
+            .then(response => response.text())
+            .then(result => {
+              console.log("Server response:", result);
+              let feedback = JSON.parse(result).status;
+              document.getElementById("path_info").innerHTML = "Start Vehicle "+feedback;
+              if (feedback=="success"){
+                stop_interv = setInterval(() => {
+                  check_stop();
+                }, 1000);
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+          }
+        }
+
+        function stop_exc(){
+
+          sendData()
+
+          function sendData() {
+            const data = "stop";
+            
+            fetch('/stop_exc', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'text/plain'  // or 'application/json' if needed
+              },
+              body: data
+            })
+            .then(response => response.text())
+            .then(result => {
+              // alert("stop")
+              console.log("Server response:", result);
+              document.getElementById("path_info").innerHTML = "Stop Vehicle CMDs";
+
+              let feedback = JSON.parse(result).status;
+              if (feedback=="success"){
+                clearInterval(stop_interv);
+              }
+              
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+          }
+        }
+
+        function path_gen(){
+
+          sendData()
+
+          function sendData() {
+            const data = "new";
+            
+            fetch('/path_gen', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'text/plain'  // or 'application/json' if needed
+              },
+              body: data
+            })
+            .then(response => response.text())
+            .then(result => {
+              console.log("Server response:", result);
+              // location.reload();
+              let feedback = JSON.parse(result).status;
+              if (feedback=="success"){
+                document.getElementById("path_info").innerHTML = "Current trajectory ("+getSystemTime()+")"
+              }else{
+                document.getElementById("path_info").innerHTML = "Trajectory generation fail"
+              }
+              // localStorage.setItem("myDivContent", "1");
+              // location.reload()
+              // alert("new path generated, replacing previous sensing")
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+          }
+        }
+
+        function path_gen_save1(){
+
+          sendData()
+
+          function sendData() {
+            const data = "new";
+            
+            fetch('/saved1_path_gen', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'text/plain'  // or 'application/json' if needed
+              },
+              body: data
+            })
+            .then(response => response.text())
+            .then(result => {
+              console.log("Server response:", result);
+              let feedback = JSON.parse(result).status;
+              if (feedback=="success"){
+                document.getElementById("path_info").innerHTML = "Previous trajectory loaded)"
+              }else{
+                document.getElementById("path_info").innerHTML = "Trajectory generation fail"
+              }
+
+              // alert("new path generated, replacing previous sensing")
+              // localStorage.setItem("myDivContent", "1");
+              // location.reload()
+
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+          }
+        }
+
+
+
+        function save_curr_path(){
+
+          sendData()
+          // location.reload()
+
+          function sendData() {
+            const data = "new";
+            
+            fetch('/save_cur_path', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'text/plain'  // or 'application/json' if needed
+              },
+              body: data
+            })
+            .then(response => response.text())
+            .then(result => {
+              console.log("Server response:", result);
+              let feedback = JSON.parse(result).status;
+              if (feedback=="success"){
+                document.getElementById("path_info").innerHTML = "Trajectory saved success"
+              }else{
+                document.getElementById("path_info").innerHTML = "Trajectory saved fail"
+              }
+              location.reload()
+
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+          }
+        }
+
+
+        function getSystemTime() {
+          const now = new Date();
+
+          const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+          const day = String(now.getDate()).padStart(2, '0');
+          const hour = String(now.getHours()).padStart(2, '0');
+          const minute = String(now.getMinutes()).padStart(2, '0');
+          const second = String(now.getSeconds()).padStart(2, '0');
+
+          return `${month}/${day}-${hour}:${minute}:${second}`;
+        }
+
+
+</script>
+
+</html>

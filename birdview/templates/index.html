@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+	  <meta charset="UTF-8">
+	  <title>Canvas Path Drawing</title>
+
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  	  <link href="https://unpkg.com/maplibre-gl@3.2.1/dist/maplibre-gl.css" rel="stylesheet" />
+  	  <script src="https://unpkg.com/maplibre-gl@3.2.1/dist/maplibre-gl.js"></script>
+  
+  
+
+	  <style>
+	    body {
+	      margin: 0;
+	      font-family: Arial, sans-serif;
+	      background: #fafafa;
+	      display: flex;
+	      flex-direction: column;
+	      align-items: center;
+	      padding: 20px;
+	    }
+
+	    #map {
+	      width: 100%;
+     	  height: 90vh;
+    	}
+
+    	#coords{
+    		font-weight: bold;
+    		position: absolute;
+		    top: 25px;
+		    z-index: 100;
+		    background: yellow;
+		    padding: 3px;
+    	}
+
+	    #controls {
+	      margin-bottom: 20px;
+	    }
+
+	    button {
+	      padding: 10px 20px;
+	      font-size: 16px;
+	      background-color: #007bff;
+	      color: white;
+	      border: none;
+	      border-radius: 5px;
+	      cursor: pointer;
+	    }
+
+	    button:hover {
+	      background-color: #0056b3;
+	    }
+
+	    canvas {
+	      border: 1px solid #ccc;
+	      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+	      background-color: #ffffff;
+	    }
+
+	    #loading-overlay{
+	    	width: 100%;
+		    height: 100%;
+		    background-color: rgba(0, 0, 0, 0.7);
+		    z-index: 9999;
+		    position: fixed;
+		}
+
+	    #loading-overlay img{
+	    	position: fixed;
+	    	left:45%;
+	    	top:40%;
+	    	width:10%;
+	    }
+
+	    #loading-overlay div{
+	    	text-align: center;
+	    	text-indent: bold;
+	    	margin-top: 45%;
+			color: white;
+			font-size: 20px;
+	    }
+
+
+	  </style>
+	</head>
+
+	<body>
+
+		<div id="coords">
+			<!-- <span id="status"></span> -->
+			<!-- <span ></span> -->
+		</div>
+		
+		<div id="map"></div>
+
+		 <div id="loading-overlay">
+		 	<div>loading GPS...</div>
+	        <image src="static/loading2.gif"></image>
+	    </div>
+
+<!-- 
+		<button onclick="draw_ori_path()">Load Planned Path</button> 
+		<hr/>
+		<canvas id="myCanvas" width="600" height="600"></canvas>
+
+
+ -->
+<!-- 		
+		<form action="/greet" method="get">
+ 	        <input type="text" name="name" placeholder="Enter your name" required>
+	        <button type="submit">Greet Me</button> 
+	    </form>
+
+		<button type="submit">Greet Me</button>
+
+		<form action="/greet" method="post">
+ 	        <input type="text" name="name" placeholder="Enter your name" required>
+	        <button type="submit">Greet Me</button> 
+	    </form>
+ -->
+		
+
+
+	</body>
+
+	<script>
+
+		let curr_veh_loc = [0, 0]
+		let curr_person_loc = [0, 0]
+		let start_gps_loc = [0, 0]
+		let map = null
+		let device2offset = [0, 0]
+		let s_lat = [0, 0]
+		let s_lon = [0, 0]
+				
+		let e_lat = [0, 0]
+		let e_lon = [0, 0]
+		let planed_path_points = [] 
+
+		let hasAlerted = false;
+
+		// let gps_interval_init = 100 // 1000ms->1hz
+		let gps_interval = 500 // 1000ms->1hz
+
+		let veh_loc_history = []
+		let max_buffer = 100
+		let gps_pin = null
+		let location_onfixed = false
+		let path_loaded = false
+		let gps_init_win_size = 2
+
+ 		// Custom purple marker
+	    const marker = document.createElement('div');
+	    marker.style.width = '12px';
+	    marker.style.height = '12px';
+	    marker.style.backgroundColor = 'orange';
+	    marker.style.borderRadius = '50%';
+	    marker.style.border = '3px solid white';
+
+	    const label = document.createElement('div');
+		label.textContent = 'v'; // <-- your text here
+		label.style.fontSize = '12px';
+		label.style.color = 'black';
+		label.style.marginBottom = '4px';
+		label.style.backgroundColor = 'white';
+		label.style.padding = '2px 4px';
+		label.style.borderRadius = '4px';
+		label.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3)';
+
+	    const el = document.createElement('div');
+	    el.style.display = 'flex';
+		el.style.flexDirection = 'column';
+		el.style.alignItems = 'center';
+		// el.appendChild(label);
+		el.appendChild(marker);
+
+
+		const marker2 = document.createElement('div');
+	    marker2.style.width = '12px';
+	    marker2.style.height = '12px';
+	    marker2.style.backgroundColor = 'purple';
+	    marker2.style.borderRadius = '50%';
+	    marker2.style.border = '3px solid white';
+
+	    const label2 = document.createElement('div');
+		label2.textContent = 'p'; // <-- your text here
+		label2.style.fontSize = '12px';
+		label2.style.color = 'black';
+		label2.style.marginBottom = '4px';
+		label2.style.backgroundColor = 'white';
+		label2.style.padding = '2px 4px';
+		label2.style.borderRadius = '4px';
+		label2.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3)';
+
+
+	    const el2 = document.createElement('div');
+	    el2.style.display = 'flex';
+		el2.style.flexDirection = 'column';
+		el2.style.alignItems = 'center';
+		el2.appendChild(label2);
+		el2.appendChild(marker2);
+
+
+		let cur_loc_marker = new maplibregl.Marker({ element: el })
+		let cur_person_marker = new maplibregl.Marker({ element: el2 })
+		let cur_end_marker = new maplibregl.Marker()
+
+		document.addEventListener('DOMContentLoaded', function () {
+		    
+		    // map styles:
+		    // 1. basic rough: 'https://demotiles.maplibre.org/style.json', // free public style
+		    // 2. detail photo: 'https://api.maptiler.com/maps/satellite/style.json?key=KYsY54iIIdV4lm89KCjs' 
+		    // 2.1 outdoor: https://api.maptiler.com/maps/outdoor-v2/style.json?key=KYsY54iIIdV4lm89KCjs
+		    //3. street no photo: 'https://api.maptiler.com/maps/basic-v2/style.json?key=KYsY54iIIdV4lm89KCjs'
+		    // 4. open map: https://osm-bright.osm.org/style.json
+
+
+		    map = new maplibregl.Map({
+			      container: 'map',
+			      style:'https://api.maptiler.com/maps/outdoor-v2/style.json?key=KYsY54iIIdV4lm89KCjs',
+			      // style:'https://api.maptiler.com/maps/satellite/style.json?key=KYsY54iIIdV4lm89KCjs',
+			      center: [-83.04342375395986, 42.52026356546626],
+		
+			      zoom: 19,
+			      maxZoom: 22
+		    });
+		    map.addControl(new maplibregl.NavigationControl());
+
+			map.on('load', () => {
+				add_marker_path(map)
+			});
+
+			cur_loc_marker.setLngLat([curr_veh_loc[1], curr_veh_loc[0]]).addTo(map);
+
+		  	// cur_person_marker.setLngLat([curr_person_loc[1], curr_person_loc[0]]).addTo(map);
+		  
+
+		  	gps_pin = setInterval(update_curr_loc, gps_interval)
+		
+
+		  	// add_gps_testing_point()
+
+
+		});
+
+
+		function add_gps_testing_point(){
+			// p1 = [42.51530, -83.04344]
+			// p2 = [42.51471, -83.04332]
+			p1 = [42.51690, -83.04474]
+			p2 = [42.51706, -83.04492]
+			add_marker(map, p1[0], p1[1]) 
+			add_marker(map, p2[0], p2[1]) 
+		}
+
+		function haversineDistance(lat1, lon1, lat2, lon2) {
+		    const R = 6371e3; // Earth's mean radius in meters
+		    const phi1 = lat1 * Math.PI / 180; // φ, λ in radians
+		    const phi2 = lat2 * Math.PI / 180;
+		    const deltaPhi = (lat2 - lat1) * Math.PI / 180;
+		    const deltaLambda = (lon2 - lon1) * Math.PI / 180;
+
+		    const a = Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) +
+		              Math.cos(phi1) * Math.cos(phi2) *
+		              Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
+		    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+		    const d = R * c; // in meters
+		    return d;
+		}
+
+
+		function check_loc_history(){
+
+			let his_len = veh_loc_history.length
+			let driftThresholdMeters = 1.0
+
+			// any two frames within a 5 window has drift smaller than 1m
+			if (his_len>=gps_init_win_size+1){
+				for (i=his_len-gps_init_win_size; i<his_len-1; i++){
+					for (j=i+1; j<his_len; j++){
+						console.log("check", veh_loc_history[i])
+						const locPre = veh_loc_history[i];
+			        	const locCur = veh_loc_history[j];
+			        	const distance = haversineDistance(locPre[0], locPre[1], locCur[0], locCur[1]);
+			        	console.log("drift (m)", distance, "between", i, j)
+			        	if (distance>driftThresholdMeters){
+			        		// alert("drift "+distance)
+			        		return false
+			        	}
+					}
+				}	
+			}else{
+				return false
+			}
+
+			// converged, remove the buffer
+			// alert("gps converged within 1m at frame " + veh_loc_history.length)
+			// console.log("gps converged", veh_loc_history)
+			for (i=0; i<veh_loc_history.length; i++){
+				veh_loc_history.shift()
+			}
+			// alert(veh_loc_history)
+
+			return true
+
+		}
+
+		
+		function update_curr_loc(){
+
+			// getLocation(); // from in-v client device (phone/laptop)
+			getLocation_fr_ublox() // from server read through ublox or real vehicle 
+
+			if (location_onfixed==false){
+				console.log("location not fixed yet", veh_loc_history)
+				location_onfixed = check_loc_history()	
+				return
+			}
+			
+			// remove overlay loading img
+			document.getElementById("loading-overlay").style.display = "none"
+		
+			get_person_gps();
+
+			// not use in this version yet
+			// get_uwb()
+			
+			// try use same devide GPS 
+			
+			// only update starting location once when 1st gps location detected
+			if (start_gps_loc[0]==0 && curr_veh_loc[0]!=0 && location_onfixed){
+				
+				start_gps_loc = curr_veh_loc
+				// replace to car init gps
+				// start_gps_loc = get_init_gps()
+				console.log("init gps", start_gps_loc)
+
+				device2offset = [start_gps_loc[0]-s_lat, start_gps_loc[1]-s_lon]
+
+			}
+
+			// in case two device has different GPS startP
+
+			// let modi_cur_gps = [curr_veh_loc[0]-device2offset[0], curr_veh_loc[1]-device2offset[1]]
+			let modi_cur_gps = [curr_veh_loc[0], curr_veh_loc[1]]
+
+			// update path instead of current in-vehicle gps setting, so that the gps path is generate not by the iphone vr, but by the 2nd device
+			// also need to update to remove the walked-over stops on path
+			if (path_loaded==false){
+				update_marker_path(map)
+				path_loaded = true
+				// alert("path updated")
+			}
+			
+
+			// cur_loc_marker.setLngLat([curr_veh_loc[1], curr_veh_loc[0]]);
+			cur_loc_marker.setLngLat([modi_cur_gps[1], modi_cur_gps[0]]);
+
+			// check if curr loc is drift away
+			if (start_gps_loc[0]!=0){
+				const maxDistanceMeters = 5;
+				drift_monitor(modi_cur_gps, maxDistanceMeters)
+			}
+
+
+			// update covered path
+			/*
+			let passed_points = []
+			let clo_dis = 100
+			let clo_idx = 0
+  			for (let i=0; i<planed_path_points.length; i++){
+  				// console.log(planed_path_points[i][0], curr_veh_loc[0], planed_path_points[i][1],curr_veh_loc[1])
+  				let dx = planed_path_points[i][0]-curr_veh_loc[0]
+  				let dy = planed_path_points[i][1]-curr_veh_loc[1]
+  				let pd = Math.sqrt(dx*dx + dy*dy)
+				if(pd<clo_dis){ // closer
+					clo_idx = i
+					clo_dis = pd
+				}	
+			} 
+
+			// clo_idx = 10
+			console.log("closest key", clo_idx)
+  			for (let i = 0; i < clo_idx; i++) {
+				passed_points.push(planed_path_points[i])
+			}
+
+  			let updatedGeoJSON2 = {
+				  type: "Feature",
+				  geometry: {
+				    type: "LineString",
+				    coordinates: passed_points
+				  },
+				  properties: {}
+			};
+
+			map.getSource('myPassedPath').setData(updatedGeoJSON2);
+			*/
+
+			let newCenter = [curr_veh_loc[1], curr_veh_loc[0]]
+			// map.setCenter(newCenter);
+
+		}
+
+		  
+		function add_marker(map, lat, lon) {
+		   
+		    new maplibregl.Marker()
+		        .setLngLat([lon, lat])
+		        .addTo(map);
+		}
+
+
+		function add_marker_path(map){
+
+	  		fetch('/path.json')  // <-- Update this to match your backend route or file path
+		    .then(response => response.json())
+		    .then(points => {
+		    	console.log("path:", points)
+		    	// points = []
+
+		    	let lat_tot = 0
+		    	let log_tot = 0
+
+				s_lat = points[0][0]
+				s_lon = points[0][1]
+				
+				e_lat = points[points.length-1][0]
+				e_lon = points[points.length-1][1]
+
+		      	for (let i = 0; i < points.length; i++) {
+		      		let lat = points[i][0]
+					let lon = points[i][1]
+
+					// for test
+					// let pre = [42.52026356546626, -83.04342375395986]
+					// lat = lat-pre[0]
+					// lon = lon+pre[1]
+
+					// console.log(lat)
+					lat_tot += lat
+					log_tot += lon
+					planed_path_points.push([lon, lat])
+
+					// add stop markers
+					// add_marker(map, lat, lon)
+				}
+
+				// line as target path
+				let lineGeoJSON = {
+				  type: "Feature",
+				  geometry: {
+				    type: "LineString",
+				    coordinates: planed_path_points
+				  },
+				  properties: {}
+				};
+
+				map.addSource('myPath', {
+				    type: 'geojson',
+				    data: lineGeoJSON
+				});
+
+				map.addLayer({
+				    id: 'line-layer',
+				    type: 'line',
+				    source: 'myPath',
+				    layout: {
+				      'line-join': 'round',
+				      'line-cap': 'round'
+				    },
+				    paint: {
+				      'line-color': '#00aaff',
+				      'line-width': 4
+				    }
+				});
+
+
+				// passed path
+				let lineGeoJSON2 = {
+				  type: "Feature",
+				  geometry: {
+				    type: "LineString",
+				    coordinates: []
+				  },
+				  properties: {}
+				};
+
+				map.addSource('myPassedPath', {
+				    type: 'geojson',
+				    data: lineGeoJSON2
+				});
+
+				map.addLayer({
+				    id: 'line-layer2',
+				    type: 'line',
+				    source: 'myPassedPath',
+				    layout: {
+				      'line-join': 'round',
+				      'line-cap': 'round'
+				    },
+				    paint: {
+				      'line-color': '#00aa00',
+				      'line-width': 4
+				    }
+				});
+
+				// Draw a point for start/end (marker)
+				// add_marker(map, s_lat, s_lon)
+				// add_marker(map, e_lat, e_lon)
+
+  				cur_end_marker.setLngLat([e_lon, e_lat]).addTo(map);
+
+				let lat_cen = lat_tot/points.length
+				let log_cen = log_tot/points.length
+				let newCenter = [log_cen, lat_cen]
+				// map.setCenter(newCenter);
+			    
+		    })
+		    .catch(err => {
+		      console.error('Error fetching path data:', err);
+		    });
+			
+	  	}
+
+	  	function update_marker_path(map){
+
+	  		fetch('/path.json')  // <-- Update this to match your backend route or file path
+		    .then(response => response.json())
+		    .then(points => {
+		    	// console.log("path:", points)
+
+				s_lat = points[0][0]+device2offset[0]
+				s_lon = points[0][1]+device2offset[1]
+				
+				e_lat = points[points.length-1][0]+device2offset[0]
+				e_lon = points[points.length-1][1]+device2offset[1]
+
+				planed_path_points = []
+		      	for (let i = 0; i < points.length; i++) {
+		      		let lat = points[i][0]+device2offset[0]
+					let lon = points[i][1]+device2offset[1]
+
+					planed_path_points.push([lon, lat])
+
+				}
+
+				// line full path
+				let updatedGeoJSON = {
+				  type: "Feature",
+				  geometry: {
+				    type: "LineString",
+				    coordinates: planed_path_points
+				  },
+				  properties: {}
+				};
+
+				map.getSource('myPath').setData(updatedGeoJSON);
+				// alert(e_lon)
+
+
+				// target
+  				cur_end_marker.setLngLat([e_lon, e_lat]).addTo(map);;
+
+
+			    
+		    })
+		    .catch(err => {
+		      console.error('Error fetching path data:', err);
+		    });
+			
+	  	}
+
+
+	  	function get_person_gps(){
+
+	  		fetch('/person.json')  // <-- Update this to match your backend route or file path
+		    .then(response => response.json())
+		    .then(point => {
+		    	
+		    	let lat = point[0]+device2offset[0]
+				let lon = point[1]+device2offset[1]
+				console.log("person gps lat lon:", lat, lon)
+
+				cur_person_marker.setLngLat([lon, lat]);
+				
+		    })
+		    .catch(err => {
+		      console.error('Error fetching person data:', err);
+		    });
+			
+	  	}
+
+	  	function get_init_gps(){
+
+	  		fetch('/init_gps.json')  // <-- Update this to match your backend route or file path
+		    .then(response => response.json())
+		    .then(point => {
+		    	
+		    	let lat = point[0]
+				let lon = point[1]
+				console.log("init gps lat lon:", lat, lon)
+
+				return [lat, lon]
+				
+		    })
+		    .catch(err => {
+		      console.error('Error fetching person data:', err);
+		      return [0,0]
+		    });
+			
+	  	}
+
+	  	function get_uwb(){
+
+	  		fetch('/uwb_read.json')  // <-- Update this to match your backend route or file path
+		    .then(response => response.json())
+		    .then(data => {
+		    	console.log("uwb:", data)
+		    	let distance = parseFloat(data)
+		    	if (distance>5){
+		    		alert("Attention, driver is 5m away from the vehicle")
+		    	}
+		    })
+		    .catch(err => {
+		      console.error('Error fetching uwb data:', err);
+		    });
+			
+	  	}
+
+	  	// phone client gps
+	  	function getLocation_fr_ublox() {
+	      
+
+	  		fetch('/ublox.json')  // <-- Update this to match your backend route or file path
+		    .then(response => response.json())
+		    .then(point => {
+		    	
+		    	let lat = point[0]
+				let lon = point[1]
+				console.log("ublox gps lat lon:", lat, lon)
+
+				cur_person_marker.setLngLat([lon, lat]);
+
+				// curr test target 42.520226833, -83.04341216
+
+				curr_veh_loc = [lat, lon]
+    		  	veh_loc_history.push(curr_veh_loc)
+	    		  if (veh_loc_history.length>max_buffer){
+	    		  	veh_loc_history.shift()
+	    		  }
+	    		  console.log("loc_his", veh_loc_history)
+
+		          // status.textContent = '';
+		          coords.textContent = `Lat: ${lat.toFixed(7)}, Lon: ${lon.toFixed(7)}`;
+				
+		    })
+		    .catch(err => {
+		      console.error('Error fetching ublox data:', err);
+		    });
+			
+	  	
+	    }
+
+		
+	    // phone client gps
+	  	function getLocation() {
+	      const status = document.getElementById('status');
+	      const coords = document.getElementById('coords');
+
+	      if (!navigator.geolocation) {
+	        status.textContent = 'Geolocation is not supported by your browser';
+	        return;
+	      }
+
+	      // status.textContent = 'Locating…';
+
+	      // navigator.geolocation.getCurrentPosition(
+	      navigator.geolocation.watchPosition( // enable tracking over time
+	        (position) => {
+	          const { latitude, longitude, heading } = position.coords;
+    		  curr_veh_loc = [latitude, longitude]
+    		  veh_loc_history.push(curr_veh_loc)
+    		  if (veh_loc_history.length>max_buffer){
+    		  	veh_loc_history.shift()
+    		  }
+    		  console.log("loc_his", veh_loc_history)
+
+	          // status.textContent = '';
+	          coords.textContent = `Lat: ${latitude.toFixed(7)}, Lon: ${longitude.toFixed(7)}`;
+
+	          // update gps on server
+	          const payload = { message: {heading:heading, lat:latitude, lon:longitude} };
+
+			  fetch('/gps_update', {
+				  method: 'POST',
+				  headers: {
+				    'Content-Type': 'application/json'
+				  },
+				  body: JSON.stringify(payload)
+			  })
+			  .then(response => {
+			    if (!response.ok) {
+				      throw new Error(`Server error: ${response.status}`);
+				    }
+				    return response.json(); // if your server returns JSON
+				  })
+				  .then(data => {
+				    console.log('Response from server:', data);
+				  })
+				  .catch(err => {
+				    console.error('Fetch error:', err);
+			  });
+
+
+	        },
+	        (error) => {
+	          switch(error.code) {
+	            case error.PERMISSION_DENIED:
+	              coords.textContent = "User denied the request for Geolocation.";
+	              break;
+	            case error.POSITION_UNAVAILABLE:
+	              coords.textContent = "Location information is unavailable.";
+	              break;
+	            case error.TIMEOUT:
+	              coords.textContent = "The request to get user location timed out.";
+	              break;
+	            default:
+	              coords.textContent = "An unknown error occurred.";
+	              break;
+	          }
+	        },
+	        {
+			    enableHighAccuracy: true, // improve accu
+			    timeout: 10000,
+			    maximumAge: 0
+			}
+
+	      );
+	    }
+
+
+	    // Haversine formula to calculate distance in meters through gps lat,lon
+		function haversineDistance(lat1, lon1, lat2, lon2) {
+			  const R = 6371000; // Earth radius in meters
+			  const toRad = (deg) => deg * (Math.PI / 180);
+
+			  const dLat = toRad(lat2 - lat1);
+			  const dLon = toRad(lon2 - lon1);
+			  const a =
+			    Math.sin(dLat / 2) ** 2 +
+			    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+			    Math.sin(dLon / 2) ** 2;
+
+			  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+			  return R * c;
+		}
+
+		// check too far from any points
+		function drift_monitor(current_loc, maxDistanceMeters){
+			
+			// Check if current location is too far from all path points
+			let isTooFar = planed_path_points.every(([lon, lat]) => {
+			  const dist = haversineDistance(current_loc[0], current_loc[1], lat, lon);
+			  // console.log(dist)
+			  return dist > maxDistanceMeters;
+			});
+			
+			if (isTooFar && !hasAlerted) {
+			  // alert("Drift too far from the path.");
+			  hasAlerted = true;
+			}
+
+			if (!isTooFar && hasAlerted) {
+			  	// alert("Back to the planned path.");
+			    hasAlerted = false;
+			}
+
+		}
+
+
+	</script>
+
+</html>

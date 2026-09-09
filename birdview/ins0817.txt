@@ -1,0 +1,5 @@
+ ./scripts/fusion_launch.sh  (colcon build)
+ ros2 run fusion_py VehicleCommanderSRP
+ ros2 run fusion_py CANGPSReader 
+ ros2 run fusion_py SerialGPSReader 
+ 

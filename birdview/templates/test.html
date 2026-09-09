@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	test
+	<script type="text/javascript">
+
+		// simulate uploading data
+
+	// test forward path uploading data
+	// let arr = [[0, 0, 20.824493408203125], [0.18291283403620362, 0.4809020444489702, 20.824493408203125], [-1.535792589187622, 10.364514350891113, 297.805419921875], [-5.958475112915039, 12.696866035461426, 297.805419921875], [-10.381157875061035, 15.029217720031738, 297.805419921875]]
+ //    const postData = {
+ //      username: "test_user",
+ //      message: JSON.stringify(arr)
+ //    };
+
+	// 	 fetch("http://127.0.0.1:5000/path_upload_x5", {
+	//       method: "POST",
+	//       headers: {
+	//         "Content-Type": "application/json"
+	//       },
+	//       body: JSON.stringify(postData)
+	//     })
+	//     .then(response => response.json())
+	//     .then(data => console.log("Server response:", data))
+	//     .catch(err => console.error("Error:", err));
+
+
+	// test reverse path uploading data
+	let arr = [[0, 0, 200.824493408203125], [0.18291283403620362, 0.4809020444489702, 200.824493408203125], [-1.535792589187622, 10.364514350891113, 117.805419921875], [-5.958475112915039, 12.696866035461426, 117.805419921875], [-10.381157875061035, 15.029217720031738, 117.805419921875]]
+    const postData = {
+      username: "test_user",
+      message: JSON.stringify(arr)
+    };
+
+		 fetch("http://127.0.0.1:5000/path_upload_x5_rev", {
+	      method: "POST",
+	      headers: {
+	        "Content-Type": "application/json"
+	      },
+	      body: JSON.stringify(postData)
+	    })
+	    .then(response => response.json())
+	    .then(data => console.log("Server response:", data))
+	    .catch(err => console.error("Error:", err));
+
+
+	</script>
+
+</body>
+</html>
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Three.js OBJ Loader Example</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.169.0/build/three.module.js';
+    import { OrbitControls } from 'https://unpkg.com/three@0.169.0/examples/jsm/controls/OrbitControls.js';
+    import { OBJLoader } from 'https://unpkg.com/three@0.169.0/examples/jsm/loaders/OBJLoader.js';
+
+    // === Scene setup ===
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x202020);
+
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 2, 5);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+
+    // === Lighting ===
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(5, 10, 7.5);
+    scene.add(light);
+    scene.add(new THREE.AmbientLight(0x404040));
+
+    // === Load the OBJ file ===
+    const loader = new OBJLoader();
+    loader.load(
+      './static/cad.obj', // path to your .obj file
+      (object) => {
+        object.scale.set(1, 1, 1);
+        scene.add(object);
+      },
+      (xhr) => {
+        console.log(`Loaded ${(xhr.loaded / xhr.total * 100).toFixed(0)}%`);
+      },
+      (error) => {
+        console.error('Error loading OBJ:', error);
+      }
+    );
+
+    // === Render loop ===
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // === Handle resizing ===
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
+ -->
