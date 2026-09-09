@@ -642,7 +642,7 @@ def start_exc_trailer():
     with open("./hummer_path/%s.txt"%fn, 'r') as f:
         cur_state = f.readline()    
     
-    if cur_state=="0":
+    if cur_state=="0" or cur_state=="3":
         desc = "initial moving"
         with open("./hummer_path/%s.txt"%fn, 'w') as f:
             f.write(next_state)
@@ -1305,9 +1305,13 @@ def camh_data():
     # f.close()
     
     # gps to meter
-    with open("hummer_path/can_heading.txt", "r") as f:
-        line = f.readline()
-    ch = json.loads(line)
+    line = [0,0,0]
+    try:
+        with open("hummer_path/can_heading.txt", "r") as f:
+            line = f.readline()
+        ch = json.loads(line)
+    except:
+        print('loading can data error')
     # print("-----", ch)
     heading1 = ch[2]
     gps1 = [ch[0], ch[1]]

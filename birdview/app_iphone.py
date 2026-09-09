@@ -3680,9 +3680,6 @@ def path_upload_x5_trailer_large_rad_fn():
 	with open(traj_control, "w") as f:
 		f.write("4")
 
-
-
-
 	
 	##
 	return jsonify({'status': 'success', 'echo': message}), 200

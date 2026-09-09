@@ -194,8 +194,8 @@ def make_on_message(ros_node, uwb_data):
 
     def on_message(client, userdata, msg):
 
-        # try:
-        if True:
+        try:
+        # if True:
             # print('0')
             time_ms = int(time.time()*1000)
             payload = json.loads(msg.payload.decode('utf-8'))
@@ -316,13 +316,13 @@ def make_on_message(ros_node, uwb_data):
             
             trailer_data = [d1, d2, theta_est, control_status]
             # trailer_data = [d1, d2, prev_filtered, control_status]
-            print("uwb dx2/theta/control", trailer_data)
+            # print("uwb dx2/theta/control", trailer_data)
             ros_node.call_back_J(trailer_data)
             
             data_ublox, data_veh_gps = load_ublox()
 
             combined_gps_data = [data_ublox[0], data_ublox[1], data_veh_gps[0], data_veh_gps[1], data_veh_gps[2]]
-            print("ublox+veh gps/heading", combined_gps_data)
+            # print("ublox+veh gps/heading", combined_gps_data)
             # ros_node.call_back_J_ublox_veh_gps(combined_gps_data)
 
             # 5. update value to ros
@@ -349,8 +349,8 @@ def make_on_message(ros_node, uwb_data):
             with open(fn3, 'w') as f:
                 f.write('[%d,%.3f,%.3f,%.3f]' % (time_ms, prev_filtered, float(tx), float(ty)))
                 
-        # except Exception as e:
-            # print(f'mqtt msg err: {e}')
+        except Exception as e:
+            print(f'mqtt msg err: {e}')
 
     return on_message
 
@@ -470,10 +470,16 @@ class VehicleCommanderSRP(Node):
 
         ## test can reading
         # read_can_bus(self, 195)
+        # self.ublox_timer = self.create_timer(0.1, self.read_can_bus(195))
 
         # self._data_lock = threading.Lock()
 
     def write_ManeuverControl(self): # frame id 226
+        # if self.is_traj_track_ready == False:
+        #     self.data_dict_226["TrailerReverseRequestStatus"] = 4
+        # else:
+        #     self.data_dict_226["TrailerReverseRequestStatus"] = 3
+        
         data_226 = self.output_MSG_226.encode(self.data_dict_226)
         msg_226 = can.Message(arbitration_id=self.output_MSG_226.frame_id, data=data_226, is_extended_id = False)
         try:
@@ -579,6 +585,20 @@ class VehicleCommanderSRP(Node):
                 except Exception as decode_error:
                     print(f"Failed to decode payload: {decode_error}")
 
+
+            elif msg.arbitration_id == msg_id and msg_id==235: # ublox
+                try:
+                    # 3. Decode the raw payload bytes using your DBC message definition
+                    decoded_data = self.input_MSG_235.decode(msg.data)
+                    
+
+                    # 4. Access your signals from the resulting dictionary
+                    print("\n--- test self-loop Received Frame ---", decoded_data)
+                    
+                except Exception as decode_error:
+                    print(f"Failed to decode payload: {decode_error}")
+
+
             # elif msg.arbitration_id == msg_id and msg_id==210: #imu
             #     try:
             #         # 3. Decode the raw payload bytes using your DBC message definition
@@ -622,7 +642,7 @@ class VehicleCommanderSRP(Node):
         #     self.data_dict_226['HitchAngle'] = 1        
         #     valid = 0
         
-        print("validate ros receive UWB data 0804 (log before flip)", msg, "valid", valid)
+        # print("validate ros receive UWB data 0804 (log before flip)", msg, "valid", valid)
         self.write_ManeuverControl()
 
 
@@ -695,50 +715,70 @@ class VehicleCommanderSRP(Node):
         self.is_traj_track_ready = False
         
         # setting TrailerReverseRequestStatus to 4 (SendingTrajectory)
+        # if self.is_traj_track_ready == False:
         self.data_dict_226["TrailerReverseRequestStatus"] = 4
+        # else:
+            # self.data_dict_226["TrailerReverseRequestStatus"] = 3
+        
         self.write_ManeuverControl()
+
+        with open(traj_control, "w") as f:
+            f.write("3")
 
         trailer_des = [0.0, 0.0, 0.0]
         msg_len = 200
         
         time.sleep(0.1)
 
+        # send trajector
         traj_maxID = int(len(traj_x)-1)
         if traj_maxID > 255:
             traj_maxID = 255
-        for i in range(len(traj_x)):
+
+        ## add padding for 1st and last msg (loop=5)
+        for i in range(len(traj_x)):    
+
             if i==msg_len-1:
                 trailer_des = [traj_x[i], traj_y[i], traj_h[i]]
 
             if i > 255:
                 break
-            data_dict_234 = {"InitialTrajectory_y":traj_y[i], "InitialTrajectory_x":traj_x[i], "InitialTrajectory_MaxID":traj_maxID, "InitialTrajectory_ID":i, "InitialTrajectory_Heading":traj_h[i]}
-            data = self.output_MSG_234.encode(data_dict_234)
-            msg = can.Message(arbitration_id=self.output_MSG_234.frame_id, data=data, is_extended_id = False)
-            # if i==len(traj_x)-2:
-                # self.data_dict_233 = {"TrailerDestination_y" : traj_y[i], "TrailerDestination_x" : traj_x[i], "TrailerDestination_Heading" : traj_h[i]}
+
+            ## front/end padding x5
+            loop = 1
+            if i==0 or i==msg_len-1:
+                loop = 5
             
-            try:
-                self.can_Bus.send(msg)
-            except can.CanError:
-                print("Message NOT sent")
-                print(f"{can.CanError}")
+            for j in range(loop):
 
-            time.sleep(0.02)
+                data_dict_234 = {"InitialTrajectory_y":traj_y[i], "InitialTrajectory_x":traj_x[i], "InitialTrajectory_MaxID":traj_maxID, "InitialTrajectory_ID":i, "InitialTrajectory_Heading":traj_h[i]}
+                data = self.output_MSG_234.encode(data_dict_234)
+                msg = can.Message(arbitration_id=self.output_MSG_234.frame_id, data=data, is_extended_id = False)
+                # if i==len(traj_x)-2:
+                    # self.data_dict_233 = {"TrailerDestination_y" : traj_y[i], "TrailerDestination_x" : traj_x[i], "TrailerDestination_Heading" : traj_h[i]}
+                
+                try:
+                    self.can_Bus.send(msg)
+                    print(msg)
+                except can.CanError:
+                    print("Message NOT sent")
+                    print(f"{can.CanError}")
 
-        time.sleep(0.1)
-
-        data_dict_233 = {"TrailerDestination_y" : trailer_des[1], "TrailerDestination_x" : trailer_des[0], "TrailerDestination_Heading" : trailer_des[2]}
-        data = self.output_MSG_233.encode(data_dict_233)
-        msg = can.Message(arbitration_id=self.output_MSG_233.frame_id, data=data, is_extended_id = False)
-        try:
-            self.can_Bus.send(msg)
-            print(f"Message sent on {self.can_Bus.channel_info}")
-        except can.CanError:
-            print("Message NOT sent")
-            print(f"{can.CanError}")
+                time.sleep(0.02)
 
         time.sleep(0.1)
+
+        # data_dict_233 = {"TrailerDestination_y" : trailer_des[1], "TrailerDestination_x" : trailer_des[0], "TrailerDestination_Heading" : trailer_des[2]}
+        # data = self.output_MSG_233.encode(data_dict_233)
+        # msg = can.Message(arbitration_id=self.output_MSG_233.frame_id, data=data, is_extended_id = False)
+        # try:
+        #     self.can_Bus.send(msg)
+        #     print(f"Message sent on {self.can_Bus.channel_info}")
+        # except can.CanError:
+        #     print("Message NOT sent")
+        #     print(f"{can.CanError}")
+
+        # time.sleep(0.1)
 
         # init as 0, when UWB is ready, send 4, wait for feedback (high) then set back to 0 and send trajectory. when trajectory received, send 1 trigger move  
 
@@ -755,25 +795,29 @@ class VehicleCommanderSRP(Node):
         #                     break
         # time.sleep(0.5)
 
-        self.data_dict_226["TrailerReverseRequestStatus"] = 0 #4
-        with open(traj_control, "w") as f:
-            f.write("0")
-
+        
         self.write_ManeuverControl()
 
         time.sleep(0.1)
 
-        is_traj_track_ready = False
-        while not is_traj_track_ready:
-            print("waiting autobox return path-rec feedback on 195:TrailerReverseStatus")
-            with can.Bus() as bus:
-                for frame_msg in bus:
-                    frame_id = frame_msg.arbitration_id
-                    if frame_id == 195:
-                        decoded = self.dbc.decode_message(frame_msg.arbitration_id, frame_msg.data)
-                        if decoded['TrailerReverseStatus'] == 1:
-                            self.is_traj_track_ready = True
-                            break
+        self.is_traj_track_ready = True
+        self.data_dict_226["TrailerReverseRequestStatus"] = 3
+        # is_traj_track_ready = False
+        # while not is_traj_track_ready:
+            # print("waiting autobox return path-rec feedback on 195:TrailerReverseStatus")
+        # if True:
+        #     with can.Bus() as bus:
+        #         for frame_msg in bus:
+        #             frame_id = frame_msg.arbitration_id
+        #             if frame_id == 195:
+        #                 decoded = self.dbc.decode_message(frame_msg.arbitration_id, frame_msg.data)
+        #                 if decoded['TrailerReverseStatus'] == 1:
+        #                 # if True:
+        #                     self.is_traj_track_ready = True
+        #                     print("ready-- reset to 0--***")
+        #                     with open(traj_control, "w") as f:
+        #                         f.write("0")
+        #                     break
 
     def reverse_req_callback(self, msg):
         pass
