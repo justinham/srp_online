@@ -1,0 +1,381 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: VehActControlGw_MABx IntVehManGw_Flex RemoteInterface
+VAL_TABLE_ TrailerReverseStatus 4 "EmergencyStopped" 3 "Stopped" 2 "Moving" 1 "Inactive" 0 "Initializing" ;
+VAL_TABLE_ TrailerReverseReqStatus 4 "SendingTrajectory" 3 "EmergencyStop" 2 "Stop" 1 "Move" 0 "Inactive" ;
+VAL_TABLE_ TurnLampStatus_tbl 3 "Hazard Lights Active" 2 "Right Indicator Active" 1 "Left Indicator Active" 0 "Inactive" ;
+VAL_TABLE_ TEGP_TrnsShftLvrPstnAuth 14 "Lever Position Unknown" 13 "Forward J" 12 "Forward I" 11 "Forward H" 10 "Forward G" 9 "Forward F" 8 "Forward E" 7 "Forward D" 6 "Forward C" 5 "Forward B" 4 "Forward A" 3 "Neutral" 2 "Reverse" 1 "Park" 0 "Between Ranges" ;
+VAL_TABLE_ TEGP_TrnsEstGrAuth 15 "Park" 14 "Reverse" 13 "Neutral" 12 "CVT Forward" 11 "Unused" 10 "Tenth" 9 "Ninth" 8 "Eighth" 7 "Seventh" 6 "Sixth" 5 "Fifth" 4 "Fourth" 3 "Third" 2 "Second" 1 "First" 0 "Not Supported" ;
+VAL_TABLE_ ActuatorStat 3 "Failed" 2 "Inhibited" 1 "Active" 0 "Inactive" ;
+VAL_TABLE_ JoystickControlMode 4 "Failed" 3 "Takeover" 2 "Inhibited" 1 "Active" 0 "Inactive" ;
+VAL_TABLE_ JoystickType 5 "SteeringWheel" 4 "DualJoystick" 3 "HOTAS" 2 "Gamepad" 1 "Joystick" 0 "None" ;
+VAL_TABLE_ VHMR_e_Sys_DgrdInfo 17 "CeVHMR_e_Sys_FAXVCDgrd" 16 "CeVHMR_e_Sys_TPIMDgrd" 15 "CeVHMR_e_Sys_ManualDgrd" 14 "CeVHMR_e_Sys_ADSCDgrd" 13 "CeVHMR_e_Sys_ADIMDgrd" 12 "CeVHMR_e_Sys_SCCMDgrd" 11 "CeVHMR_e_Sys_VICMDgrd" 10 "CeVHMR_e_Sys_SDMDgrd" 9 "CeVHMR_e_Sys_BCMDgrd" 8 "CeVHMR_e_Sys_EOCMDgrd" 7 "CeVHMR_e_Sys_MCTMDgrd" 6 "CeVHMR_e_Sys_SPIMDgrd" 5 "CeVHMR_e_Sys_FOPMDgrd" 4 "CeVHMR_e_Sys_BrakeDgrd" 3 "CeVHMR_e_Sys_EPSDgrd" 2 "CeVHMR_e_Sys_ICCMDgrd" 1 "CeVHMR_e_Sys_ECMDgrd" 0 "CeVHMR_e_Sys_None" ;
+VAL_TABLE_ SWEM_DUDmask 1 "Use Data" 0 "Do Not Use Data" ;
+VAL_TABLE_ DUDMask 1 "Do Not Use Data" 0 "Use Data" ;
+VAL_TABLE_ Invalidity 1 "Invalid" 0 "Valid" ;
+VAL_TABLE_ TbBOOLEAN 1 "True" 0 "False" ;
+VAL_TABLE_ RedStrgReqdOpMode 0 "Standby" 1 "AtnmControl" 2 "DriverControl" 3 "Failed" ;
+VAL_TABLE_ RedStrgMotorAOutputCap 0 "Normal" 1 "Reduced" 2 "Off " 3 "Failed" ;
+VAL_TABLE_ RedStrgMotorBOutputCap 0 "Normal" 1 "Reduced" 2 "Off" 3 "Failed" ;
+VAL_TABLE_ RedVehicleSpeedV 0 "Valid" 1 "Invalid" ;
+VAL_TABLE_ RedStrgSyOutputStatus 0 "Unknown" 1 "FailOperational" 2 "SingleController" 3 "Failed" ;
+VAL_TABLE_ RedStrgSyOutputStatusV 0 "Valid" 1 "Invalid" ;
+VAL_TABLE_ RedStrgLimitingSource 0 "Unknown" 1 "Normal" 2 "SafetyLimitExceeded" 3 "Thermal " 4 "Voltage" 5 "ECUFaultLimited" ;
+VAL_TABLE_ RedStrgDriverApdTorqueSensorV 0 "Valid" 1 "Invalid" ;
+VAL_TABLE_ RedStrgAngleRateCapabilityV 0 "Valid" 1 "Invalid" ;
+VAL_TABLE_ RedStrgCommStatusV 0 "Valid" 1 "Invalid" ;
+VAL_TABLE_ RedStrgCommStatus 0 "CommNormal" 1 "PriCommFailed" 2 "RedCommFailed" 3 "DualCommFailed" ;
+VAL_TABLE_ RedStrgControlSourceUtilized 0 "PriController" 1 "RedController" 2 "NoSource" ;
+VAL_TABLE_ RedStrgControlSourceUtilizedV 0 "Valid" 1 "Invalid" ;
+VAL_TABLE_ RedStrgOpMode 0 "Standby" 1 "TorqueFeedback" 2 "PositionFollowing" ;
+VAL_TABLE_ RedStrgOpModeV 0 "Valid" 1 "Invalid" ;
+VAL_TABLE_ RedStrgDriverIntDetected 0 "True" 1 "False" ;
+VAL_TABLE_ RedStrgBBattVoltageAvgV 0 "Valid" 1 "Invalid" ;
+VAL_TABLE_ RedStrgBBattCurrentV 0 "Valid" 1 "Invalid" ;
+VAL_TABLE_ RedStrWhAngV 0 "Valid" 1 "Invalid" ;
+VAL_TABLE_ RedStrWhlAngSenCalStat 0 "Unknown" 1 "Estimated" 2 "Calibrated" ;
+VAL_TABLE_ RedStrWhlAngSenTyp 0 "Type1" 1 "Type2" 2 "Type3" 3 "Type4" ;
+VAL_TABLE_ RedStrWhlAngMsk 0 "DontUseData" 1 "UseData" ;
+VAL_TABLE_ RedStrWhlAngGradV 0 "Valid" 1 "Invalid" ;
+VAL_TABLE_ RedStrWhlAngGradMsk 0 "Dont Use Data" 1 "Use Data" ;
+VAL_TABLE_ RedSysPowerMode 0 "Off" 1 "Accessory" 2 "Run" 3 "Crank Request" ;
+VAL_TABLE_ RedSysBackupPowerMode 0 "Off" 1 "Accessory" 2 "Run" 3 "Crank Request" ;
+VAL_TABLE_ RedSysBackupPowerModeEN 0 "False" 1 "True" ;
+VAL_TABLE_ RedEngineRunActive 0 "False" 1 "True" ;
+VAL_TABLE_ RedFAXCVModePri 1 "Standby" 2 "SyncWithVehicle" 3 "AutonomousControl" 4 "DriverControl" 5 "Failed" ;
+VAL_TABLE_ RedFAXVMStatPri 0 "Off" 1 "Available" 2 "Failed" ;
+VAL_TABLE_ RedAtnmControlReqPri 0 "False" 1 "True" ;
+VAL_TABLE_ RedSyncEnablePri 0 "False" 1 "True" ;
+VAL_TABLE_ RedFAXVMDrvIntrDectPri 0 "False" 1 "True" ;
+VAL_TABLE_ RedSyncCompletePri 0 "False" 1 "True" ;
+VAL_TABLE_ RedSteeringEmulStatusPri 0 "Normal" 1 "FailSoft" 2 "Failed" ;
+VAL_TABLE_ RedBrakePedalStatusPri 0 "Normal" 1 "FailSoft" 2 "Failed" ;
+VAL_TABLE_ RedRangeShiftStatusPri 0 "Normal" 1 "FailSoft" 2 "Failed" ;
+VAL_TABLE_ Redundant_FAXVM_Range_Shift_Stat 0 "Normal" 1 "FailSoft" 2 "Failed" ;
+VAL_TABLE_ RedHornRequestPri 0 "Off" 1 "Single" 2 "Multiple" 3 "ContinuousON" 4 "VehicleLocator" 5 "Panic" ;
+VAL_TABLE_ RedDegradedStatePri 0 "CeVHMR_e_FDS_Initialization" 1 "CeVHMR_e_FDS_DgrdMode1" 2 "CeVHMR_e_FDS_DgrdMode2" 3 "CeVHMR_e_FDS_DgrdMode3" 4 "CeVHMR_e_FDS_DgrdMode4" 5 "CeVHMR_e_FDS_NormalOperation" ;
+VAL_TABLE_ RedDgrdStReasonPri 0 "CeVHMR_e_FDS_None" 1 "CeVHMR_e_FDS_LossOfDrvBrkReqOnlyEPBAvail" 2 "CeVHMR_e_FDS_LossOfEPBrakingOnly" 3 "CeVHMR_e_FDS_LossOfBrakeRed" 4 "CeVHMR_e_FDS_LossOfTotalBrakingReq" 5 "CeVHMR_e_FDS_LossOfDrvStrgWhlReq" 6 "CeVHMR_e_FDS_LossOfStrgRed" 7 "CeVHMR_e_FDS_LossOfStrgRedAlertOnly" 8 "CeVHMR_e_FDS_LossOfDrvGearShiftReq" 9 "CeVHMR_e_FDS_LossOfGearShiftRed" 10 "CeVHMR_e_FDS_LossOfDrvPropReq" 11 "CeVHMR_e_FDS_LossOfPropRed" 12 "CeVHMR_e_FDS_LossOfStrnAnglCoherence" 13 "CeVHMR_e_FDS_LossOfBrkTrqCoherence" 14 "CeVHMR_e_FDS_SysStateMsmtch" 15 "CeVHMR_e_FDS_ModeMsmtch" 16 "CeVHMR_e_FDS_OprOvrrdMsmtch" 17 "CeVHMR_e_FDS_StrEmltrMsmtch" 18 "CeVHMR_e_FDS_LossOfCommWithADIM" 19 "CeVHMR_e_FDS_LossOfCommRedWithADIM" 20 "CeVHMR_e_FDS_LossOfCommRedWithFAXVC" 21 "CeVHMR_e_FDS_LossOfDrvTurnSigReq" 22 "CeVHMR_e_FDS_LossOfDrvHiBeamLampReq" 23 "CeVHMR_e_FDS_LossOfDrvHazardLightReq" 24 "CeVHMR_e_FDS_LossOfDrvHeadLampReq" 25 "CeVHMR_e_FDS_LossOfDrvHVACReq" 26 "CeVHMR_e_FDS_LossOfDrvWnshldWprReq" 27 "CeVHMR_e_FDS_LossOfDrvFAXVCModeReq" 28 "CeVHMR_e_FDS_LossOfDrvAtnmModeReq" 29 "CeVHMR_e_FDS_LossOfDrvHornReq" 30 "CeVHMR_e_FDS_LossOfDrvIntrLampReq" 31 "CeVHMR_e_FDS_RedEscalation" 32 "CeVHMR_e_FDS_VehDgrdStEscalation" 33 "CeVHMR_e_FDS_LossOfIPCNotification" ;
+VAL_TABLE_ RedAutoHighBeamEnableReqPri 0 "False" 1 "True" ;
+VAL_TABLE_ RedHeadLampParkLampReqPri 0 "Automatic" 1 "Off" 2 "ParkLamp" 3 "HeadLamp" ;
+VAL_TABLE_ RedHazardLampReqPri 0 "False" 1 "True" ;
+VAL_TABLE_ RedHighBeamReqPri 0 "Off" 1 "On" 2 "FlashToPass" ;
+VAL_TABLE_ RedTurnLampReqPri 0 "NoActivation" 1 "Left" 2 "Right" ;
+VAL_TABLE_ RedOverheadCourtesyLampReqPri 0 "False" 1 "True" ;
+VAL_TABLE_ RedOperationalStatePri 0 "InhibitMotion" 1 "ADSCControl" 2 "FAXVMControl" 3 "XVCControl" 4 "DVT" 5 "AVT" 6 "SVT" 7 "OpSafetyCheck" ;
+VAL_TABLE_ RedRackSteeringWheelAngleVPri 0 "False" 1 "True" ;
+VAL_TABLE_ RedVehicleMotionInhibited 0 "False" 1 "True" ;
+VAL_TABLE_ RedVehicleDegradedState 0 "Initialization" 1 "DegradedState1" 2 "DegradedState2" 3 "DegradedState3" 4 "DegradedState4" 5 "DegradedState5" ;
+VAL_TABLE_ RedActiveController 0 "Primary" 1 "Secondary" ;
+VAL_TABLE_ RedFAXVMDegradedStateRecom 0 "Initialization" 1 "DegradedState1" 2 "DegradedState2" 3 "DegradedState3" 4 "DegradedState4" 5 "DegradedState5" 6 "NormalOperation" ;
+VAL_TABLE_ RedFAXVMEquippedStatus 0 "Unknown" 1 "NotEquipped" 2 "Equipped" 3 "Error" ;
+VAL_TABLE_ RedFAXVMSteeringAngleReqVPri 0 "False" 1 "True" ;
+VAL_TABLE_ BrakeTorqReqVPri 0 "False" 1 "True" ;
+VAL_TABLE_ BrakeTorqReqTypePri 0 "NoRequest" 1 "BrakeTorqueReq" 2 "StandStillHoldReq" ;
+VAL_TABLE_ TransmissionRangeReqPri 0 "NoAction" 1 "Park" 2 "Reverse" 3 "Neutral" 4 "Drive" ;
+VAL_TABLE_ TransmissionRangeReqVPri 0 "False" 1 "True" ;
+VAL_TABLE_ RedRackMotorAOutputCapPri 0 "Normal" 1 "Reduced" 2 "Off " 3 "Failed" ;
+VAL_TABLE_ RedRackMotorBOutputCapPri 0 "Normal" 1 "Reduced" 2 "Off" 3 "Failed" ;
+VAL_TABLE_ IndFrontHVACOnPri 0 "False" 1 "True" ;
+VAL_TABLE_ IndTempSettingStateFrontLeftPri 0 "Off" 1 "Auto" 2 "AutoLo" 3 "AutoHi" 4 "Manual" ;
+VAL_TABLE_ IndTempUnitsPri 0 "Celcius" 1 "Fahrenheit" ;
+VAL_TABLE_ IndRearWindowDefogSettingPri 0 "RearDefOff" 1 "RearDefOn" ;
+VAL_TABLE_ IndHeatedFrontWindshiedSettingPr 0 "HFWS_OFF" 1 "HFWS_ON" ;
+VAL_TABLE_ HVACEnReqPri 0 "False" 1 "True" ;
+VAL_TABLE_ ReqTempLevelActivePri 0 "False" 1 "True" ;
+VAL_TABLE_ RearDefogSettingPri 0 "NoAction" 1 "RearDefOff" 2 "RearDefOn" ;
+VAL_TABLE_ ReqMeasurementSysExtPri 0 "US" 1 "Imperial" 2 "MetricKML" 3 "MetricLp100KM" ;
+VAL_TABLE_ HeatedFrontWindshieldSettingPri 0 "False" 1 "True" ;
+VAL_TABLE_ ReqHVACPowerChangePri 0 "False" 1 "True" ;
+VAL_TABLE_ ReqHVACAutoPri 0 "False" 1 "True" ;
+VAL_TABLE_ SIBISSS_In14CktFASec 1 "true" 0 "false" ;
+VAL_TABLE_ SIBISSS_In14SnsrStSec 1 "Closed" 0 "Open" ;
+VAL_TABLE_ SIBISSS_In13CktFASec 1 "true" 0 "false" ;
+VAL_TABLE_ SIBISSS_In13SnsrStSec 1 "Closed" 0 "Open" ;
+VAL_TABLE_ SIBISSS_In12CktFASec 1 "true" 0 "false" ;
+VAL_TABLE_ SIBISSS_In12SnsrStSec 1 "Closed" 0 "Open" ;
+VAL_TABLE_ SIBISSS_In11CktFASec 1 "true" 0 "false" ;
+VAL_TABLE_ SIBISSS_In11SnsrStSec 1 "Closed" 0 "Open" ;
+VAL_TABLE_ SIBISSS_In10CktFASec 1 "true" 0 "false" ;
+VAL_TABLE_ SIBISSS_In10SnsrStSec 1 "Closed" 0 "Open" ;
+VAL_TABLE_ SIBISSS_In9CktFASec 1 "true" 0 "false" ;
+VAL_TABLE_ SIBISSS_In9SnsrStSec 1 "Closed" 0 "Open" ;
+VAL_TABLE_ SIBISSS_In8CktFASec 1 "true" 0 "false" ;
+VAL_TABLE_ SIBISSS_In8SnsrStSec 1 "Closed" 0 "Open" ;
+VAL_TABLE_ SIBISSS_In7CktFASec 1 "true" 0 "false" ;
+VAL_TABLE_ SIBISSS_In7SnsrStSec 1 "Closed" 0 "Open" ;
+VAL_TABLE_ SIBISSS_In6CktFASec 1 "true" 0 "false" ;
+VAL_TABLE_ SIBISSS_In6SnsrStSec 1 "Closed" 0 "Open" ;
+VAL_TABLE_ SIBISSS_In5CktFASec 1 "true" 0 "false" ;
+VAL_TABLE_ SIBISSS_In5SnsrStSec 1 "Closed" 0 "Open" ;
+VAL_TABLE_ SIBISSS_In4CktFASec 1 "true" 0 "false" ;
+VAL_TABLE_ SIBISSS_In4SnsrStSec 1 "Closed" 0 "Open" ;
+VAL_TABLE_ SIBISSS_In3CktFASec 1 "true" 0 "false" ;
+VAL_TABLE_ SIBISSS_In3SnsrStSec 1 "Closed" 0 "Open" ;
+VAL_TABLE_ SIBISSS_In2CktFASec 1 "true" 0 "false" ;
+VAL_TABLE_ SIBISSS_In2SnsrStSec 1 "Closed" 0 "Open" ;
+VAL_TABLE_ SIBISSS_In1CktFASec 1 "true" 0 "false" ;
+VAL_TABLE_ SIBISSS_In1SnsrStSec 1 "Closed" 0 "Open" ;
+
+
+BO_ 238 VehGPSHdg: 3 Vector__XXX
+ SG_ vehGPS_Heading : 7|19@0+ (0.001,0) [0|524.287] "deg" Vector__XXX
+
+BO_ 237 VehGPSLatLon: 8 Vector__XXX
+ SG_ VehGPS_inv : 25|1@0- (1,0) [0|0] "" Vector__XXX
+ SG_ vehGPS_Longitude : 39|31@0- (1,0) [-1073741824|1073741823] "mas" Vector__XXX
+ SG_ vehGPS_Latitude : 7|30@0- (1,0) [-536870912|536870911] "mas" Vector__XXX
+
+BO_ 236 ROSAdtlInfo2: 5 Vector__XXX
+ SG_ uBlox_Heading : 23|19@0+ (0.001,0) [0|524.287] "deg" Vector__XXX
+ SG_ HitchAngleRaw : 7|13@0- (0.1,0) [-409.6|409.5] "deg" Vector__XXX
+
+BO_ 235 ROSAdtlInfo1: 8 Vector__XXX
+ SG_ uBloxGPS_inv : 25|1@0- (1,0) [0|0] "" Vector__XXX
+ SG_ uBlox_Longitude : 39|31@0- (1,0) [-1073741824|1073741823] "mas" Vector__XXX
+ SG_ uBlox_Latitude : 7|30@0- (1,0) [-536870912|536870911] "mas" Vector__XXX
+
+BO_ 195 TrailerReverseFeedback: 1 Vector__XXX
+ SG_ TrajectoryReceived : 3|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ TrailerReverseStatus : 7|4@0+ (1,0) [0|15] "" Vector__XXX
+
+BO_ 226 ManeuverControl: 7 Vector__XXX
+ SG_ VehUWBSens2_reading : 32|10@0+ (0.01,0) [0|10.23] "m" Vector__XXX
+ SG_ VehUWBSens1_reading : 26|10@0+ (0.01,0) [0|10.23] "m" Vector__XXX
+ SG_ HitchInclination : 3|11@0- (0.1,0) [-102.4|102.3] "deg" Vector__XXX
+ SG_ HitchAngle : 23|13@0- (0.1,0) [-409.6|409.5] "deg" Vector__XXX
+ SG_ TrailerReverseRequestStatus : 7|4@0+ (1,0) [0|15] "" Vector__XXX
+
+BO_ 234 TrajectoryInfo: 8 Vector__XXX
+ SG_ InitialTrajectory_y : 28|14@0- (0.01,0) [-81.92|81.91] "m" Vector__XXX
+ SG_ InitialTrajectory_x : 10|14@0- (0.01,0) [-81.92|81.91] "m" Vector__XXX
+ SG_ InitialTrajectory_MaxID : 63|8@0+ (1,0) [0|255] "m" Vector__XXX
+ SG_ InitialTrajectory_ID : 55|8@0+ (1,0) [0|255] "m" Vector__XXX
+ SG_ InitialTrajectory_Heading : 7|13@0- (0.1,0) [-409.6|409.5] "deg" Vector__XXX
+
+BO_ 233 ManeuverInfo: 8 Vector__XXX
+ SG_ TrailerDestination_y : 28|14@0- (0.01,0) [-81.92|81.91] "m" Vector__XXX
+ SG_ TrailerDestination_x : 10|14@0- (0.01,0) [-81.92|81.91] "m" Vector__XXX
+ SG_ TrailerDestination_Heading : 7|13@0- (0.1,0) [-409.6|409.5] "deg" Vector__XXX
+
+BO_ 231 SensorInfo2: 3 Vector__XXX
+ SG_ TrailerUWBsens_z : 23|8@0- (0.02,0) [-2.56|2.54] "m" Vector__XXX
+ SG_ TrailerUWBsens_y : 15|8@0- (0.02,0) [-2.56|2.54] "m" Vector__XXX
+ SG_ TrailerUWBsens_x : 7|8@0- (0.02,0) [-2.56|2.54] "m" Vector__XXX
+
+BO_ 230 SensorInfo1: 6 Vector__XXX
+ SG_ VehUWBsens2_z : 47|8@0- (0.02,0) [-2.56|2.54] "m" Vector__XXX
+ SG_ VehUWBsens2_y : 39|8@0- (0.02,0) [-2.56|2.54] "m" Vector__XXX
+ SG_ VehUWBsens2_x : 31|8@0- (0.02,0) [-2.56|2.54] "m" Vector__XXX
+ SG_ VehUWBsens1_z : 23|8@0- (0.02,0) [-2.56|2.54] "m" Vector__XXX
+ SG_ VehUWBsens1_y : 15|8@0- (0.02,0) [-2.56|2.54] "m" Vector__XXX
+ SG_ VehUWBsens1_x : 7|8@0- (0.02,0) [-2.56|2.54] "m" Vector__XXX
+
+BO_ 229 TrailerSetup2: 5 Vector__XXX
+ SG_ TrailerHtch2Axle3 : 31|12@0+ (0.01,0) [0|10.23] "m" Vector__XXX
+ SG_ TrailerHtch2Axle2 : 11|12@0+ (0.01,0) [0|10.23] "m" Vector__XXX
+ SG_ TrailerHtch2Axle1 : 7|12@0+ (0.01,0) [0|10.23] "m" Vector__XXX
+
+BO_ 228 TrailerSetup1: 6 Vector__XXX
+ SG_ VehRrAxl2HtchBall : 37|8@0+ (0.01,0) [0|2.55] "m" Vector__XXX
+ SG_ TrailerWidth : 31|10@0+ (0.01,0) [0|10.23] "m" Vector__XXX
+ SG_ TrailerWheelbase : 9|10@0+ (0.01,0) [0|10.23] "m" Vector__XXX
+ SG_ TrailerPresent : 45|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ TrailerLength : 7|14@0+ (0.01,0) [0|10.23] "m" Vector__XXX
+
+BO_ 211 WheelSpdStatus: 8 VehActControlGw_MABx
+ SG_ TurnLampStat : 59|2@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ WhlAngVelRRr_Inv : 60|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ WhlAngVelRFrt_Inv : 61|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ WhlAngVelLRr_Inv : 62|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ WhlAngVelLFrt_Inv : 63|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ WhlAngVelRRr : 45|14@0+ (0.004,0) [0|65.532] "rev/s" Vector__XXX
+ SG_ WhlAngVelRFrt : 27|14@0+ (0.004,0) [0|65.532] "rev/s" Vector__XXX
+ SG_ WhlAngVelLRr : 9|14@0+ (0.004,0) [0|65.532] "rev/s" Vector__XXX
+ SG_ WhlAngVelLFrt : 7|14@0+ (0.004,0) [0|65.532] "rev/s" Vector__XXX
+
+BO_ 210 IMU_Cmd_Stat: 8 VehActControlGw_MABx
+ SG_ Yaw_Stat : 39|16@0+ (0.003,-98) [-98|98.605] "" Vector__XXX
+ SG_ PropTrqCmd_Stat : 63|8@0+ (19.61,0) [0|5000.55] "" Vector__XXX
+ SG_ CmndBrkDcl : 55|8@0+ (0.0385,-9.81) [-9.81|0.00749999999999851] "" Vector__XXX
+ SG_ Ay_Stat : 23|16@0+ (0.0009766,-32) [-32|32.001481] "" Vector__XXX
+ SG_ Ax_Stat : 7|16@0+ (0.0009766,-32) [-32|32.001481] "" Vector__XXX
+
+BO_ 240 PCIMControl: 8 IntVehManGw_Flex
+ SG_ PCIM_directionIndicator : 36|2@0+ (1,0) [0|0] ""  IntVehManGw_Flex,VehActControlGw_MABx,RemoteInterface
+ SG_ PCIM_driveCommandAction : 6|2@0+ (1,0) [0|0] ""  IntVehManGw_Flex,VehActControlGw_MABx,RemoteInterface
+ SG_ PCIM_permissionValid : 7|1@0+ (1,0) [0|0] ""  IntVehManGw_Flex,VehActControlGw_MABx,RemoteInterface
+ SG_ PCIM_velocity_0 : 4|16@0+ (0.01,-327.68) [-327.68|327.67] "m/s"  IntVehManGw_Flex,VehActControlGw_MABx,RemoteInterface
+ SG_ PCIM_curvature_0 : 20|16@0+ (1E-005,-0.32768) [-0.32768|0.32767] "1/m"  IntVehManGw_Flex,VehActControlGw_MABx,RemoteInterface
+
+BO_ 209 VehicleControlStatus: 8 VehActControlGw_MABx
+ SG_ PrplsnRdy : 39|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Eng_Stat : 25|2@0+ (1,0) [0|3] "SED"  IntVehManGw_Flex
+ SG_ Velocity_Stat : 21|12@0+ (0.01,0) [0|40.95] "m/s"  IntVehManGw_Flex
+ SG_ StrgWhlAng_Stat : 5|16@0+ (0.03,-960) [-960|1006.05] "deg"  IntVehManGw_Flex
+ SG_ LongDir_Stat : 7|2@0+ (1,0) [0|3] "SED"  IntVehManGw_Flex
+
+BO_ 208 AVPStatus: 8 VehActControlGw_MABx
+ SG_ AVPControl_Stat : 7|4@0+ (1,0) [0|15] "SED"  IntVehManGw_Flex
+
+BO_ 225 VehicleControlRequest: 8 IntVehManGw_Flex
+ SG_ BrakeHoldReq : 32|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ Brake_Rq : 27|9@0+ (0.05,-12.75) [-12.75|12.8] "m/sec²"  VehActControlGw_MABx,RemoteInterface
+ SG_ Velocity_Rq : 23|12@0+ (0.01,0) [0|40.95] "m/s"  VehActControlGw_MABx,RemoteInterface
+ SG_ StrgWhlAng_Rq : 7|16@0+ (0.03,-960) [-960|1006.05] "Deg"  VehActControlGw_MABx,RemoteInterface
+ SG_ LongDir_Rq : 34|2@0+ (1,0) [0|3] "SED"  VehActControlGw_MABx,RemoteInterface
+
+BO_ 224 AVPRequest: 8 IntVehManGw_Flex
+ SG_ AVPIndicator_Rq : 4|2@0+ (1,0) [0|3] "SED"  VehActControlGw_MABx,RemoteInterface
+ SG_ AVPControl_Rq : 7|3@0+ (1,0) [0|7] "SED"  VehActControlGw_MABx,RemoteInterface
+
+BO_ 193 VehicleData1: 8 Vector__XXX
+ SG_ TEGP_TrnsShftLvrPstnAuth : 43|4@0+ (1,0) [0|15] "" Vector__XXX
+ SG_ TEGP_TrnsEstGrAuth : 55|4@0+ (1,0) [0|15] "" Vector__XXX
+ SG_ SWIP_StrgWhlAngAuth : 26|15@0+ (0.0625,-1024) [-1024|1023.9375] ""  RemoteInterface
+ SG_ CSBTP_DrvrIntndTtBrkTqAuth : 8|14@0+ (2,0) [0|32766] "Nm"  RemoteInterface
+ SG_ AATP_ActAxlTrqAuth : 7|15@0+ (2,-22534) [-22534|43000] "Nm"  RemoteInterface
+
+BO_ 192 ModeFeedback: 8 Vector__XXX
+ SG_ MdChngAllwd : 17|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ MdFdbk_Cksm : 51|12@0+ (1,0) [0|4095] "" Vector__XXX
+ SG_ MdFdbk_ARC : 53|2@0+ (1,0) [0|3] "" Vector__XXX
+ SG_ BrakeStat : 20|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ VehicleControlMode : 23|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ SteeringStat : 10|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ PropStat : 13|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ RemoreTypeFdbk : 0|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ ETRS_Stat : 3|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ ControlLayoutFdbk : 7|4@0+ (1,0) [0|15] ""  RemoteInterface
+
+BO_ 177 ModeControl: 8 RemoteInterface
+ SG_ MdCtrl_ARC : 52|2@0+ (1,0) [0|3] "" Vector__XXX
+ SG_ MdControl_Cksm : 50|11@0+ (1,0) [0|4095] "" Vector__XXX
+ SG_ RemoteType : 15|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ RemoteControlMode : 3|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ ControlLayout : 7|4@0+ (1,0) [0|15] "" Vector__XXX
+
+BO_ 176 remote_Cmd1: 8 RemoteInterface
+ SG_ RemoteCmdActv : 36|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ SteeringAxis1 : 7|12@0+ (0.049,-100) [-100|100] "Pct" Vector__XXX
+ SG_ PropAxis1 : 11|10@0+ (0.098,0) [0|100] "Pct" Vector__XXX
+ SG_ remote1_Cksm : 50|11@0+ (1,0) [0|4095] "" Vector__XXX
+ SG_ RemoteCmd1_ARC : 52|2@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ ETRS_Req1 : 39|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ BrakePdlPosAx1 : 17|10@0+ (0.098,0) [0|100] "Pct" Vector__XXX
+
+
+
+CM_ "Private Bus 3";
+CM_ SG_ 240 PCIM_velocity_0 "direct forwarding of PCIM velecity request";
+CM_ SG_ 240 PCIM_curvature_0 "direct forwarding of PCIM curvature request";
+CM_ SG_ 209 Eng_Stat "Used to fill engine status in PCVM";
+CM_ SG_ 209 Velocity_Stat "Used to fill velocity for PCVM (rear-axle average speed)";
+CM_ SG_ 209 StrgWhlAng_Stat "Used to fill curvature in PCVM";
+CM_ SG_ 209 LongDir_Stat "Used to fill SafetyDrivingDirection in PCVM";
+CM_ SG_ 208 AVPControl_Stat "AVP enable feedback from vehicle";
+CM_ SG_ 225 Brake_Rq "Used to trigger emergency brake with maximum deceleration";
+CM_ SG_ 225 Velocity_Rq "Used to control velocity of the vehicle";
+CM_ SG_ 225 StrgWhlAng_Rq "Used to control curvature of the vehicle";
+CM_ SG_ 225 LongDir_Rq "Used to control forward/backward movement direction of the vehicle";
+CM_ SG_ 224 AVPIndicator_Rq "Direction indicator request
+";
+CM_ SG_ 224 AVPControl_Rq "AVP enable request to vehicle";
+BA_DEF_ BO_  "GenMsgSendType" ENUM  "cyclicX","spontanX","cyclicIfActiveX","spontanWithDelay","cyclicAndSpontanX","cyclicAndSpontanWithDelay","spontanWithRepitition","cyclicIfActiveAndSpontanWD";
+BA_DEF_ SG_  "GenSigSendType" ENUM  "cyclicX","spontanX","cyclicIfActiveA","spontanWithDelay","cyclicAndSpontanX","cyclicAndSpontanWithDelay","spontanWithRepitition","cyclicIfActiveAndSpontanWD","NoSendType";
+BA_DEF_ SG_  "GenSigStartValue" INT 0 0;
+BA_DEF_ SG_  "SignalType" STRING ;
+BA_DEF_ SG_  "SignalLongName" STRING ;
+BA_DEF_ SG_  "PacketOrder" INT 0 65535;
+BA_DEF_ SG_  "VNSigAllNodes" ENUM  "No","Yes";
+BA_DEF_ BO_  "GenMsgCycleTime" INT 0 10000;
+BA_DEF_DEF_  "GenMsgSendType" "cyclicX";
+BA_DEF_DEF_  "GenSigSendType" "cyclicX";
+BA_DEF_DEF_  "GenSigStartValue" 0;
+BA_DEF_DEF_  "SignalType" "UNM";
+BA_DEF_DEF_  "SignalLongName" "";
+BA_DEF_DEF_  "PacketOrder" 0;
+BA_DEF_DEF_  "VNSigAllNodes" "No";
+BA_DEF_DEF_  "GenMsgCycleTime" 0;
+BA_ "GenMsgCycleTime" BO_ 238 10;
+BA_ "GenMsgCycleTime" BO_ 237 10;
+BA_ "GenMsgCycleTime" BO_ 236 10;
+BA_ "GenMsgCycleTime" BO_ 235 10;
+BA_ "GenMsgCycleTime" BO_ 209 20;
+BA_ "GenMsgCycleTime" BO_ 208 20;
+BA_ "GenMsgCycleTime" BO_ 225 20;
+BA_ "GenMsgCycleTime" BO_ 224 20;
+BA_ "GenMsgCycleTime" BO_ 193 10;
+BA_ "GenMsgCycleTime" BO_ 192 10;
+BA_ "GenMsgCycleTime" BO_ 177 10;
+BA_ "GenMsgCycleTime" BO_ 176 10;
+BA_ "GenSigStartValue" SG_ 210 Yaw_Stat 32666.6666666667;
+BA_ "GenSigStartValue" SG_ 210 CmndBrkDcl 254.805194805195;
+BA_ "GenSigStartValue" SG_ 210 Ay_Stat 32766.7417571165;
+BA_ "GenSigStartValue" SG_ 210 Ax_Stat 32766.7417571165;
+BA_ "GenSigStartValue" SG_ 240 PCIM_velocity_0 32768;
+BA_ "GenSigStartValue" SG_ 240 PCIM_curvature_0 32768;
+BA_ "GenSigStartValue" SG_ 209 StrgWhlAng_Stat 32000;
+BA_ "GenSigStartValue" SG_ 225 Brake_Rq 255;
+BA_ "GenSigStartValue" SG_ 225 StrgWhlAng_Rq 32000;
+BA_ "GenSigStartValue" SG_ 193 SWIP_StrgWhlAngAuth 16384;
+BA_ "GenSigStartValue" SG_ 193 AATP_ActAxlTrqAuth 11267;
+BA_ "GenSigStartValue" SG_ 176 SteeringAxis1 2040.81632653061;
+VAL_ 195 TrailerReverseStatus 4 "EmergencyStopped" 3 "Stopped" 2 "Moving" 1 "Inactive" 0 "Initializing" ;
+VAL_ 226 TrailerReverseRequestStatus 4 "SendingTrajectory" 3 "EmergencyStop" 2 "Stop" 1 "Move" 0 "Inactive" ;
+VAL_ 211 TurnLampStat 3 "Hazard Lights Active" 2 "Right Indicator Active" 1 "Left Indicator Active" 0 "Inactive" ;
+VAL_ 240 PCIM_directionIndicator 2 "left" 1 "right" 0 "off" ;
+VAL_ 240 PCIM_driveCommandAction 3 "terminate" 2 "drive" 1 "initialize" 0 "standby" ;
+VAL_ 240 PCIM_permissionValid 1 "Drive permission valid" 0 "No drive permission" ;
+VAL_ 209 Eng_Stat 3 "reserved" 2 "reserved" 1 "engine on" 0 "engine off" ;
+VAL_ 209 LongDir_Stat 3 "park" 2 "backward" 1 "forward" 0 "neutral" ;
+VAL_ 208 AVPControl_Stat 15 "reserved" 14 "reserved" 13 "reserved" 12 "reserved" 11 "Backend communication error" 10 "Human intervention" 9 "Generic vehicle error" 8 "GMS error" 7 "reserved" 6 "reserved" 5 "reserved" 4 "reserved" 3 "reserved" 2 "AVP drive mode" 1 "AVP ready" 0 "AVP inactive" ;
+VAL_ 225 Brake_Rq 255 "invalid" 254 "unknown" ;
+VAL_ 225 Velocity_Rq 4095 "invalid" 4094 "unknown" ;
+VAL_ 225 StrgWhlAng_Rq 65535 "invalid" 65534 "unknown" ;
+VAL_ 225 LongDir_Rq 3 "park" 2 "backward" 1 "forward" 0 "neutral" ;
+VAL_ 224 AVPIndicator_Rq 3 "reserved" 2 "right" 1 "left" 0 "no blinking" ;
+VAL_ 224 AVPControl_Rq 7 "reserved" 6 "reserved" 5 "reserved" 4 "reserved" 3 "AVP terminate" 2 "AVP drive request" 1 "AVP control request" 0 "no request" ;
+VAL_ 193 TEGP_TrnsShftLvrPstnAuth 14 "Lever Position Unknown" 13 "Forward J" 12 "Forward I" 11 "Forward H" 10 "Forward G" 9 "Forward F" 8 "Forward E" 7 "Forward D" 6 "Forward C" 5 "Forward B" 4 "Forward A" 3 "Neutral" 2 "Reverse" 1 "Park" 0 "Between Ranges" ;
+VAL_ 193 TEGP_TrnsEstGrAuth 15 "Park" 14 "Reverse" 13 "Neutral" 12 "CVT Forward" 11 "Unused" 10 "Tenth" 9 "Ninth" 8 "Eighth" 7 "Seventh" 6 "Sixth" 5 "Fifth" 4 "Fourth" 3 "Third" 2 "Second" 1 "First" 0 "Not Supported" ;
+VAL_ 192 BrakeStat 3 "Failed" 2 "Inhibited" 1 "Active" 0 "Inactive" ;
+VAL_ 192 VehicleControlMode 4 "Failed" 3 "Takeover" 2 "Inhibited" 1 "Active" 0 "Inactive" ;
+VAL_ 192 SteeringStat 3 "Failed" 2 "Inhibited" 1 "Active" 0 "Inactive" ;
+VAL_ 192 PropStat 3 "Failed" 2 "Inhibited" 1 "Active" 0 "Inactive" ;
+VAL_ 192 RemoreTypeFdbk 5 "SteeringWheel" 4 "DualJoystick" 3 "HOTAS" 2 "Gamepad" 1 "Joystick" 0 "None" ;
+VAL_ 192 ETRS_Stat 3 "Failed" 2 "Inhibited" 1 "Active" 0 "Inactive" ;
+VAL_ 177 RemoteType 5 "SteeringWheel" 4 "DualJoystick" 3 "HOTAS" 2 "Gamepad" 1 "Joystick" 0 "None" ;
+VAL_ 177 RemoteControlMode 4 "Failed" 3 "Takeover" 2 "Inhibited" 1 "Active" 0 "Inactive" ;
+
