@@ -1,26 +1,17 @@
-import json
-
-import rclpy
-from rclpy.node import Node
-from fusion.msg import TripleVectorWps
-from std_msgs.msg import Float32MultiArray
-
-import numpy as np
-import math
-from scipy.optimize import minimize
-import pandas as pd
-
 import sys
 import json
 import os
 import time
+import math
+import numpy as np
+from scipy.optimize import minimize
+import pandas as pd
 
 waypoints, headings = [], []
 pts_btw_anchors = 100
 
-IS_INPUT_INTERPOLATED = False # true for interpulated points
+IS_INPUT_INTERPOLATED = False  # True for pre-interpolated points
 filename = '/home/connau/srp/birdview/hummer_path/pathx5_can_heading.txt'
-# filename = '/home/connau/srp/birdview/hummer_path/path_local_den_1_stage_can_heading.txt'
 is_reverse = False
 
 def convert_angle_to_0_2pi(angle):
@@ -97,17 +88,14 @@ def read_nested_list_from_file_json(filename):
         nested_list = json.loads(content)
         return nested_list
 
-class WpsFromJustinApp(Node):
+class WpsFromJustinApp:
     def __init__(self):
-        super().__init__('WpsFromJustinApp')
+        global filename
         if IS_INPUT_INTERPOLATED:
             filename = '/home/connau/srp/birdview/hummer_path/path_local_den_1_stage_can_heading.txt'
         self.points = None
-        self.publisher_ = self.create_publisher(TripleVectorWps, 'interpolated_wps', 10)
-        self.goal_publisher_ = self.create_publisher(Float32MultiArray, 'goal_wp', 10)
-        self.timer = self.create_timer(1.0, self.timer_callback)
 
-    def timer_callback(self):
+    def execute_interpolation(self):
         try:
             new_points = read_nested_list_from_file_json(filename)
         except json.JSONDecodeError:
@@ -116,33 +104,39 @@ class WpsFromJustinApp(Node):
         except FileNotFoundError:
             print(f"Error: The file '{filename}' was not found.")
             return
-        if self.points == new_points or new_points == None:
+
+        if self.points == new_points or new_points is None:
             return
+        
         self.points = new_points
+        trajectory_data = []
+
         if not IS_INPUT_INTERPOLATED:
-            waypoints, headings = [], []
+            waypoints_list, headings_list = [], []
             for i, pt in enumerate(self.points):
                 if i == 1:
                     continue
-                waypoints.append((pt[1], pt[0])) # the coordinate justin using has x and y interchanged
+                waypoints_list.append((pt[1], pt[0]))  # Interchange x and y coordinates
                 if not is_reverse:
-                    headings.append(pt[2] * np.pi/180)
+                    headings_list.append(pt[2] * np.pi / 180)
                 else:
-                    headings.append(convert_angle_to_0_2pi(pt[2] * np.pi/180 + np.pi))
-            self.get_logger().info(f"Got points from Justinapp: {waypoints}")
-            trajectory_data = []
+                    headings_list.append(convert_angle_to_0_2pi(pt[2] * np.pi / 180 + np.pi))
+            
+            print(f"Got points from Justinapp: {waypoints_list}")
+            
             directions = ['f', 'f', 'f']
-            # directions = ['r', 'r', 'r']
-            bezier_path = BezierPathFitter(waypoints, headings, directions)
-            msg = TripleVectorWps()
-            msg.plan_x, msg.plan_y, msg.plan_h = [], [], []
-            for segment_idx in range(len(waypoints)-1):
-                for t in np.arange(0.0, 1.0, 1/pts_btw_anchors):
+            bezier_path = BezierPathFitter(waypoints_list, headings_list, directions)
+            
+            # Local output mock objects replacing the legacy ROS payload arrays
+            plan_x, plan_y, plan_h = [], [], []
+
+            for segment_idx in range(len(waypoints_list) - 1):
+                for t in np.arange(0.0, 1.0, 1 / pts_btw_anchors):
                     (x, y), ref_heading, curvature = bezier_path.evaluate(t=t, segment_idx=segment_idx)
                     ref_heading = convert_angle_to_0_2pi(ref_heading)
-                    msg.plan_x.append(x)
-                    msg.plan_y.append(y)
-                    msg.plan_h.append(ref_heading)
+                    plan_x.append(x)
+                    plan_y.append(y)
+                    plan_h.append(ref_heading)
                     entry = [y, x, math.degrees(ref_heading)]
                     trajectory_data.append(entry)
             
@@ -152,33 +146,45 @@ class WpsFromJustinApp(Node):
                 os.makedirs(directory)
             with open(json_path, 'w') as f:
                 json.dump(trajectory_data, f, indent=2)
-            self.get_logger().info(f"Saved trajectory to {json_path}")
+            
+            print(f"Saved trajectory to {json_path}")
+            print(f"x_vals: {plan_x}")
+            print(f"y_vals: {plan_y}")
+            print(f"heading_vals: {plan_h}")
 
         else:
-            msg = TripleVectorWps()
-            x_vals = np.array([entry[1] for entry in self.points], dtype=float)
-            msg.plan_x = x_vals.tolist()
-            y_vals = np.array([entry[0] for entry in self.points], dtype=float)
-            msg.plan_y = y_vals.tolist()
-            heading_vals = np.array([np.radians(entry[2]) for entry in self.points], dtype=float)
-            msg.plan_h = heading_vals.tolist()
+            # Handle the pre-interpolated execution branch natively
+            x_vals = np.array([entry[1] for entry in self.points], dtype=float).tolist()
+            y_vals = np.array([entry[0] for entry in self.points], dtype=float).tolist()
+            heading_vals = np.array([np.radians(entry[2]) for entry in self.points], dtype=float).tolist()
+            
+            print("Processing pre-interpolated points branch.")
+            print(f"x_vals: {x_vals}")
+            print(f"y_vals: {y_vals}")
+            print(f"heading_vals: {heading_vals}")
 
-        goal_msg = Float32MultiArray()
-        goal_msg.data = [float(self.points[3][1]), float(self.points[3][0]), float(self.points[3][2])]
-        # goal_msg.data = [float(self.points[-1][1]), float(self.points[-1][0]), float(self.points[-1][2])]
-        self.publisher_.publish(msg)
-        time.sleep(0.5)
-        self.goal_publisher_.publish(goal_msg)
-        self.get_logger().info('Publishing triple vectors')
-        self.get_logger().info(f"x_vals: {msg.plan_x}")
-        self.get_logger().info(f"y_vals: {msg.plan_y}")
-        self.get_logger().info(f"heading_vals: {msg.plan_h}")
+        # Extract target goal message properties natively
+        goal_wp = [float(self.points[3][1]), float(self.points[3][0]), float(self.points[3][2])]
+        print(f"Current Target Goal Waypoint calculated: {goal_wp}")
 
-def main(args=None):
-    rclpy.init(args=args)
-    node = WpsFromJustinApp()
-    rclpy.spin(node)
-    rclpy.shutdown()
+
+def main():
+    app = WpsFromJustinApp()
+    print("Starting Bezier path interpolator loop (1Hz). Press Ctrl+C to exit.")
+    
+    # 5. Replaced the 1.0s ROS Timer loop with a standard native execution cycle
+    try:
+        while True:
+            start_time = time.time()
+            app.execute_interpolation()
+            
+            # Accurately time step the loop at exactly 1Hz execution frequency
+            elapsed = time.time() - start_time
+            sleep_time = max(0.01, 1.0 - elapsed)
+            time.sleep(sleep_time)
+            
+    except KeyboardInterrupt:
+        print("\nExiting path interpolator loop.")
 
 if __name__ == '__main__':
     main()
